@@ -90,6 +90,7 @@ Route::middleware(['auth'])->group(function(){
     Route::delete('/{id}/produk', 'Master\KategoriHargaController@destroy');
 
     Route::get('/penjualan/data', 'Transaksi\PenjualanController@index');
+    Route::patch('/penjualan/data', 'Transaksi\PenjualanController@daftarPenjualan');
     Route::get('/penjualan/baru', 'Transaksi\PenjualanController@create');
     Route::patch('/penjualan/produk/data', 'Transaksi\PenjualanTempController@daftarProduk');
     Route::get('/penjualan/produk/data/{id}', 'Transaksi\PenjualanTempController@setProduk');

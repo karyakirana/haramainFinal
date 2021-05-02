@@ -10,6 +10,8 @@ use App\Models\Transaksi\PenjualanTemp;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
+use Yajra\DataTables\DataTables;
 
 class PenjualanController extends Controller
 {
@@ -46,7 +48,7 @@ class PenjualanController extends Controller
             ->orderBy('penjualan.tgl_nota', 'desc')
             ->get();
 
-        return Datatables::of($data)
+        return DataTables::of($data)
             // ->addIndexColumn()
             ->addColumn('namaSales', function($row){
                 if ($row->nameSales2 == null) {

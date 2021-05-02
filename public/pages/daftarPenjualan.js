@@ -14,7 +14,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
             order : [],
             ajax: {
                 headers : {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                url: HOST_me + '/produk/data',
+                url: HOST_me + '/penjualan/data',
                 type: 'PATCH',
                 data: {
                     // parameters for custom backend script demo
@@ -39,7 +39,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 {data: 'print'}, // print
                 {data: 'update'}, // jumlah print
                 {data: 'penket'}, // keterangan
-                {data: 'Actions', responsivePriority: -1},
+                {data: 'tombol', responsivePriority: -1},
             ],
             columnDefs: [
                 {
