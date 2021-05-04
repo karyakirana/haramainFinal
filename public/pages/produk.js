@@ -161,8 +161,11 @@ $('#btnNew').on("click",function(){
     $('#modalCrud').on('shown.bs.modal', function(){
         select2kategori();
         select2kategoriHarga();
-        $('#idKategori').val(null).trigger('change');
-        $('#kategoriHarga').val(null).trigger('change');
+        var newOption = new Option('', '', false, false);
+        $('#idKategori').append(newOption).trigger('change');
+        // $('#idKategori').val(null).trigger('change');
+        var newOption_2 = new Option('', '', false, false);
+        $('#kategoriHarga').append(newOption_2).trigger('change');
 
     });
 });
@@ -203,6 +206,14 @@ $('#btnSubmit').on("click", function(){
     });
 });
 
+$('#btnClose').on('click', function(){
+    $('#modalCrud').on('hidden.bs.modal', function () {
+        console.log('tutup');
+        $('#idKategori').val(null).trigger('change');
+        $('#kategoriHarga').val(null).trigger('change');
+    });
+})
+
 $('body').on("click", '#btnEdit', function(){
     var dataEdit = $(this).data("value");
 
@@ -216,15 +227,17 @@ $('body').on("click", '#btnEdit', function(){
         success : function (data) {
             $('#formModal').trigger('reset'); // reset form on modals
             // insert value
-            $('[name="id"]').val(data.id);
-            $('[name="nama"]').val(data.namaSupplier);
-            $('[name="alamatSupplier"]').val(data.alamatSupplier);
-            $('[name="telepon"]').val(data.tlpSupplier);
-            $('[name="npwp"]').val(data.npwpSupplier);
-            $('[name="email"]').val(data.emailSupplier);
-            $('[name="keterangan"]').val(data.keteranganSupplier);
+            $('[name="id"]').val(data.id_produk);
+            $('[name="kodeLokal"]').val(data.kode_lokal);
+            $('[name="penerbit"]').val(data.penerbit);
+            $('[name="namaProduk"]').val(data.nama_produk);
+            $('[name="halaman"]').val(data.hal);
+            $('[name="cover"]').val(data.cover);
+            $('[name="harga"]').val(data.harga);
+            $('[name="size"]').val(data.size);
+            $('[name="keterangan"]').val(data.deskripsi);
             $('#modalCrud').modal('show'); // show bootstrap modal
-            $('#formModal').on('shown.bs.modal', function(){
+            $('#modalCrud').on('shown.bs.modal', function(){
                 select2kategori();
                 select2kategoriHarga();
             });
@@ -232,14 +245,15 @@ $('body').on("click", '#btnEdit', function(){
                 text: data.nama_kategori+' | '+data.id_lokal,
                 id: data.id_kategori,
             }
-            var newOption = new Option(dataSelect2_1.text, dataSelect2_1.id, false, false);
+            var newOption = new Option(dataSelect2_1.text, dataSelect2_1.id, false, true);
             $('#idKategori').append(newOption).trigger('change');
             var dataSelect2 = {
                 text: data.nama_kat,
                 id: data.id_kat_harga,
             }
-            var newOption_2 = new Option(dataSelect2.text, dataSelect2.id, false, false);
+            var newOption_2 = new Option(dataSelect2.text, dataSelect2.id, false, true);
             $('#kategoriHarga').append(newOption_2).trigger('change');
+
         },
         error : function (jqXHR, textStatus, errorThrown)
         {

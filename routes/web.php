@@ -84,14 +84,15 @@ Route::middleware(['auth'])->group(function(){
     Route::patch('/produk/data', 'Master\ProdukController@daftarProduk');
     Route::post('/produk/data', 'Master\ProdukController@store');
     Route::put('/produk/data', 'Master\ProdukController@update');
-    Route::get('/{id}/produk', 'Master\KategoriHargaController@edit');
-    Route::post('/{id}/produk', 'Master\KategoriHargaController@softdeletes');
-    Route::put('/{id}/produk', 'Master\KategoriHargaController@restore');
-    Route::delete('/{id}/produk', 'Master\KategoriHargaController@destroy');
+    Route::get('/{id}/produk', 'Master\ProdukController@edit');
+    Route::post('/{id}/produk', 'Master\ProdukController@softdeletes');
+    Route::put('/{id}/produk', 'Master\ProdukController@restore');
+    Route::delete('/{id}/produk', 'Master\ProdukController@destroy');
 
     Route::get('/penjualan/data', 'Transaksi\PenjualanController@index');
     Route::patch('/penjualan/data', 'Transaksi\PenjualanController@daftarPenjualan');
     Route::get('/penjualan/baru', 'Transaksi\PenjualanController@create');
+    Route::get('/penjualan/{id}/edit', 'Transaksi\PenjualanController@edit');
     Route::patch('/penjualan/produk/data', 'Transaksi\PenjualanTempController@daftarProduk');
     Route::get('/penjualan/produk/data/{id}', 'Transaksi\PenjualanTempController@setProduk');
     Route::patch('/penjualan/produk/customer', 'Transaksi\PenjualanTempController@daftarCustomer');
@@ -100,6 +101,29 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/penjualan/detil/{id}', 'Transaksi\PenjualanTempController@edit'); // edit
     Route::delete('/penjualan/detil/{id}', 'Transaksi\PenjualanTempController@destroy'); // edit
 
+    // simpan penjualan
+    Route::post('/penjualan', 'Transaksi\PenjualanController@store');
+    Route::put('/penjualan', 'Transaksi\PenjualanController@update');
+
+    // print
+    Route::get('/print/penjualan/{id}', 'Transaksi\PenjualanController@print');
+
+    Route::get('/stock/masuk', 'Stock\StockMasukController@index');
+    Route::post('/stock/masuk', 'Stock\StockMasukController@store');
+    Route::put('/stock/masuk', 'Stock\StockMasukController@update');
+    Route::patch('/stock/masuk', 'Stock\StockMasukController@daftarStockMasuk');
+
+    // Stock Masuk Baru
+    Route::get('/stock/masuk/baru', 'Stock\StockMasukController@create');
+    Route::get('/stock/masuk/edit/{id}', 'Stock\StockMasukController@edit');
+
+    Route::patch('/stock/temp/produk', 'Stock\StockTempController@daftarProduk');
+    Route::patch('/stock/temp/supplier', 'Stock\StockTempController@daftarSupplier');
+    Route::get('/stock/temp/produk/{id}', 'Stock\StockTempController@setProduk');
+
+    Route::patch('/stock/detil/{id}', 'Stock\StockTempController@daftarDetil');
+    Route::post('/stock/temp/simpan', 'Stock\StockTempController@store');
+    Route::delete('/stock/temp/produk/{id}', 'Stock\StockTempController@destroy');
 });
 
 //require __DIR__.'/auth.php';

@@ -138,7 +138,7 @@ $('body').on("click", "#btnSoft", function(){
         // ajax delete data to database
         $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            url : HOST_me+"/"+dataEdit+"/produk/kategori",
+            url : HOST_me+"/"+dataDelete+"/produk/kategori",
             type: "POST",
             dataType: "JSON",
             success: function (data) {
@@ -165,7 +165,7 @@ $('body').on("click", "#btnRestore", function(){
     // ajax delete data to database
     $.ajax({
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        url : HOST_me+"/"+dataEdit+"/produk/kategori",
+        url : HOST_me+"/"+dataRestore+"/produk/kategori",
         type: "PUT",
         dataType: "JSON",
         success: function (data) {

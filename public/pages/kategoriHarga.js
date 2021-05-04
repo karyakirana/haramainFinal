@@ -70,7 +70,7 @@ $('#btnNew').on("click",function(){
     $('#formModal').trigger('reset'); // reset form on modals
     $('#modalCrud').modal('show'); // show bootstrap modal
     $('#modalCrud').on('shown.bs.modal', function(){
-        select2jenis();
+
         $('#jenisSupplier').val(null).trigger('change');
     });
 });
@@ -153,7 +153,7 @@ $('body').on("click", "#btnSoft", function(){
         // ajax delete data to database
         $.ajax({
             headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-            url : HOST_me+"/"+dataEdit+"/produk/kategoriharga",
+            url : HOST_me+"/"+dataDelete+"/produk/kategoriharga",
             type: "POST",
             dataType: "JSON",
             success: function (data) {
@@ -180,7 +180,7 @@ $('body').on("click", "#btnRestore", function(){
     // ajax delete data to database
     $.ajax({
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        url : HOST_me+"/"+dataEdit+"/produk/kategoriharga",
+        url : HOST_me+"/"+dataRestore+"/produk/kategoriharga",
         type: "PUT",
         dataType: "JSON",
         success: function (data) {
@@ -204,7 +204,7 @@ $('body').on("click", "#btnForce", function(){
     // ajax delete data to database
     $.ajax({
         headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-        url : HOST_me+"/"+dataEdit+"/produk/kategoriharga",
+        url : HOST_me+"/"+dataForce+"/produk/kategoriharga",
         type: "DELETE",
         dataType: "JSON",
         success: function (data) {

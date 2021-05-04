@@ -106,7 +106,6 @@ class KategoriHargaController extends Controller
         ]);
 
         $data = [
-            'jenisSupplier' => $request->jenis,
             'nama_kat' => $request->namaKategori,
             'keterangan' => $request->keterangan,
         ];

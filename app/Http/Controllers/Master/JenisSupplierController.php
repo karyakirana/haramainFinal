@@ -75,7 +75,7 @@ class JenisSupplierController extends Controller
      */
     public function edit($id)
     {
-        $data = JenisSupplier::find($id)->first();
+        $data = JenisSupplier::find($id);
         return json_encode($data);
     }
 

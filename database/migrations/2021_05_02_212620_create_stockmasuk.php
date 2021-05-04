@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateJenisSupplierTable extends Migration
+class CreateStockmasuk extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,14 @@ class CreateJenisSupplierTable extends Migration
      */
     public function up()
     {
-        Schema::create('jenissupplier', function (Blueprint $table) {
+        Schema::create('stockmasuk', function (Blueprint $table) {
             $table->id();
-            $table->string('jenis');
+            $table->string('activeCash');
+            $table->string('kode')->unique();
+            $table->bigInteger('idSupplier');
+            $table->bigInteger('idUser');
+            $table->date('tglMasuk');
+            $table->string('nomorPo')->nullable();
             $table->text('keterangan')->nullable();
             $table->softDeletes();
             $table->timestamps();
@@ -29,6 +34,6 @@ class CreateJenisSupplierTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jenissupplier');
+        Schema::dropIfExists('stockmasuk');
     }
 }

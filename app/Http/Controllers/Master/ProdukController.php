@@ -84,7 +84,7 @@ class ProdukController extends Controller
             'idKategori'=> 'required|string|max:255',
             'namaProduk'=> 'required|string|max:255',
             'halaman' => 'required|integer',
-            'id_kat_harga' => 'required|string|max:255',
+            'kategoriHarga' => 'required|string|max:255',
             'harga' => 'required|integer',
         ]);
 
@@ -140,18 +140,25 @@ class ProdukController extends Controller
     public function update(Request $request)
     {
         $request->validate([
-            'nama'=> 'required|string|max:255',
-            'alamat'=> 'required|string|max:255',
+            'idKategori'=> 'required|string|max:255',
+            'namaProduk'=> 'required|string|max:255',
+            'halaman' => 'required|integer',
+            'kategoriHarga' => 'required|string|max:255',
+            'harga' => 'required|integer',
         ]);
 
         $data = [
-            'jenisSupplier' => $request->jenis,
-            'namaSupplier' => $request->nama,
-            'alamatSupplier' => $request->alamat,
-            'tlpSupplier' => $request->telepon,
-            'npwpSupplier' => $request->npwp,
-            'emailSupplier' => $request->email,
-            'keteranganSupplier' => $request->keterangan,
+            'id_kategori' => $request->idKategori,
+            'id_produk' => $this->idProduk(),
+            'kode_lokal' => $request->kodeLokal,
+            'penerbit' => $request->penerbit,
+            'hal' => $request->halaman,
+            'cover' => $request->cover,
+            'id_kat_harga' => $request->kategoriHarga,
+            'nama_produk' => $request->namaProduk,
+            'harga' => $request->harga,
+            'size' => $request->size,
+            'deskripsi' => $request->keterangan,
         ];
         $update = Produk::where('id_produk', $request->id)->update($data);
         return json_encode(['status'=>TRUE, 'update'=>$update]);

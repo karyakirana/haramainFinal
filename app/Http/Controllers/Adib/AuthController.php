@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Adib;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\LoginRequest;
 use App\Models\ClosedCash;
+use App\Models\Stock\StockTemp;
 use App\Models\Transaksi\PenjualanTemp;
 use App\Models\User;
 use App\Providers\RouteServiceProvider;
@@ -37,6 +38,7 @@ class AuthController extends Controller
         $idUser = Auth::user()->id;
         $request->session()->put('ClosedCash', $this->ClosedCash($idUser));
         $this->penjualanTemp($idUser);
+        $this->StockTemp($idUser);
 
         return json_encode(['status' => TRUE]);
     }
@@ -47,9 +49,17 @@ class AuthController extends Controller
      */
     private function penjualanTemp($id)
     {
-        $tempPenjualan = PenjualanTemp::where('idSales', $id)->latest()->first();
+        $tempPenjualan = PenjualanTemp::where('idSales', $id)->where('jenisTemp', 'Penjualan')->latest()->first();
         if ($tempPenjualan) {
             session(['penjualan'=>$tempPenjualan->id]);
+        }
+    }
+
+    private function StockTemp($id)
+    {
+        $tempStock = StockTemp::where('idUser', $id)->where('jenisTemp', 'StockMasuk')->latest()->first();
+        if ($tempStock) {
+            session(['stockMasuk'=>$tempStock->id]);
         }
     }
 
@@ -108,6 +118,8 @@ class AuthController extends Controller
         Auth::login($user);
 
         $idUser = Auth::user()->id;
+        $this->StockTemp($idUser);
+        $this->penjualanTemp($idUser);
         $request->session()->put('ClosedCash', $this->ClosedCash($idUser));
 
         return json_encode(['status' => TRUE]);

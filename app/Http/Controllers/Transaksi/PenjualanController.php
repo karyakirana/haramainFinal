@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Transaksi;
 
 use App\Http\Controllers\Controller;
+use App\Models\Master\Customer;
 use App\Models\Transaksi\Penjualan;
 use App\Models\Transaksi\PenjualanDetil;
 use App\Models\Transaksi\PenjualanDetilTemp;
@@ -10,6 +11,7 @@ use App\Models\Transaksi\PenjualanTemp;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 use Yajra\DataTables\DataTables;
 
@@ -70,7 +72,7 @@ class PenjualanController extends Controller
                 $btnPrint = '<a href="'.url('/print/penjualan')."/".str_replace('/', '-', $row->penjualanId).'" class="btn btn-sm btn-clean btn-icon" title="Print">
                                     <i class="text-dark-50 flaticon2-print"></i>
                                 </a>';
-                $btnEdit = '<a href="'.url('/penjualan')."/".str_replace('/', '-', $row->penjualanId)."/edit".'" onClick=edit("'.$row->penjualanId.'") class="btn btn-sm btn-clean btn-icon" title="Edit details">
+                $btnEdit = '<a href="'.url('/penjualan/')."/".str_replace('/', '-', $row->penjualanId)."/edit".'" class="btn btn-sm btn-clean btn-icon" title="Edit details">
                                     <i class="la text-success la-edit"></i>
                                 </a>';
                 $btnDelete = '<a href="javascript:;" onClick=hapus("'.$row->penjualanId.'") class="btn btn-sm btn-clean btn-icon" title="Edit details">
@@ -107,6 +109,7 @@ class PenjualanController extends Controller
 
     public function create()
     {
+//        session()->forget('penjualan'); // hapus session temp
         $sessionTemp = session('penjualan');
         if ($sessionTemp) {
             $penjualanTemp = PenjualanTemp::find($sessionTemp);
@@ -149,12 +152,12 @@ class PenjualanController extends Controller
     {
         // variabel-variabel umum
         $idPenjualan = $this->idPenjualan();
-        $idPenjualanTemp = $request->idTemp;
-        $tglPenjualan = date('Y-m-d', strtotime($request->tglNota));
-        $tglTempo = date('Y-m-d', strtotime($request->tglTempo));
+        $idPenjualanTemp = $request->temp;
+        $tglPenjualan = date('Y-m-d', strtotime($request->tanggalNota));
+        $tglTempo = date('Y-m-d', strtotime($request->tanggalTempo));
 
         // Ambil Data detail_penjualan_temp
-        $detilTemp = DetilPenjualanTemp::where('idPenjualanTemp', $idPenjualanTemp)->get();
+        $detilTemp = PenjualanDetilTemp::where('idPenjualanTemp', $idPenjualanTemp)->get();
 
         $dataDetil = null;
         foreach ($detilTemp as $row) {
@@ -175,14 +178,14 @@ class PenjualanController extends Controller
             'activeCash' => session('ClosedCash'),
             'id_jual' => $idPenjualan,
             'tgl_nota' => $tglPenjualan,
-            'tgl_tempo' => $tglTempo,
-            'status_bayar' => $request->radioStatusBayar,
+            'tgl_tempo' => ($request->statusBayar == 'Tunai') ? $tglTempo : null,
+            'status_bayar' => $request->statusBayar,
             'sudahBayar'=> "belum", // pembuatan nota belum bayar
             'total_jumlah' => $detilTemp->count(), // jumlah Item
             'ppn' => $request->ppn,
             'biaya_lain' => $request->biayaLain,
             'total_bayar' => $detilTemp->sum('sub_total') + $request->ppn + $request->biayaLain, // total semua subtotal atau $request->hiddenTotalSemuanya
-            'id_cust' => $request->idCust,
+            'id_cust' => $request->id_customer,
             'id_user' => Auth::user()->id,
             'keterangan' => $request->keterangan
         ];
@@ -198,6 +201,202 @@ class PenjualanController extends Controller
             $deleteTempMaster = PenjualanTemp::where('id', $idPenjualanTemp)->delete();
             DB::commit();
             session()->forget('penjualan'); // hapus session temp
+            $jsonData = [
+                'status' => true,
+                'detail' => $insertDetail,
+                'master' => $insertMaster,
+                'deleteDetail' => $deleteTempDetail,
+                'deletemaster' => $deleteTempMaster,
+                'nomorPenjualan' => str_replace('/', '-', $idPenjualan),
+            ];
+        } catch (ModelNotFoundException $e) {
+            DB::rollBack();
+            $jsonData = [
+                'status' => false,
+                'keterangan' => $e->getMessage(),
+            ];
+        }
+
+        return json_encode($jsonData);
+    }
+
+    public function print($id)
+    {
+        $idPenjualan = str_replace('-', '/', $id);
+
+        $dataPen = Penjualan::leftJoin('user as u', 'penjualan.id_user', '=', 'u.id_user')
+            ->leftJoin('users', 'penjualan.id_user', '=', 'users.idUserOld')
+            ->leftJoin('customer as c', 'penjualan.id_cust', '=', 'c.id_cust')
+            ->select(
+                'penjualan.id_jual as penjualanId',
+                'c.nama_cust as namaCustomer',
+                'addr_cust',
+                'tgl_nota',
+                'tgl_tempo',
+                'status_bayar',
+                'sudahBayar',
+                'total_jumlah',
+                'ppn',
+                'biaya_lain',
+                'total_bayar',
+                'penjualan.keterangan as penket',
+                'u.username as namaSales1',
+                'users.name as namaSales2',
+                'print', // jumlah print
+                'penjualan.updated_at as update', // last print
+            )
+            ->where('id_jual', $idPenjualan)
+            ->first();
+        $dataPenjualan = [
+            'penjualanId' => $dataPen->penjualanId,
+            'namaCustomer' => $dataPen->namaCustomer,
+            'addr_cust' => $dataPen->addr_cust,
+            'tgl_nota' => date('d-m-Y', strtotime($dataPen->tgl_nota)),
+            'tgl_tempo' => ( strtotime($dataPen->tgl_tempo) > 0) ? date('d-m-Y', strtotime($dataPen->tgl_tempo)) : '',
+            'status_bayar' => $dataPen->status_bayar,
+            'sudahBayar' => $dataPen->sudahBayar,
+            'total_jumlah' => $dataPen->total_jumlah,
+            'ppn' => $dataPen->ppn,
+            'biaya_lain' => $dataPen->biaya_lain,
+            'total_bayar' => $dataPen->total_bayar,
+            'penket' => $dataPen->penket,
+            'print' => $dataPen->print,
+            'update' => $dataPen->update,
+        ];
+        // update print
+        $updatePrint = Penjualan::where('id_jual', $idPenjualan)->update(['print' => $dataPen->print + 1]);
+        // $dataPenjualan = Penjualan::where('id_jual', $idPenjualan)->first();
+        // $dataPenjualanDetail = PenjualanDetail::where('id_jual', $idPenjualan)->get();
+        $dataPenjualanDetail = PenjualanDetil::leftJoin('produk', 'detil_penjualan.id_produk', '=', 'produk.id_produk')
+            ->where('id_jual', $idPenjualan)
+            ->get();
+        $data = [
+            'dataUtama' => json_encode($dataPenjualan),
+            'dataDetail' => $dataPenjualanDetail
+        ];
+        return view('pages.report.invoicePenjualan', $data);
+    }
+
+    /**
+     * Mengambil data sesuai dengan id
+     *
+     * @param  string id
+     * @return json|false|string
+     */
+    public function edit($id)
+    {
+        // convert to id bersangkutan
+        $uniqueId = str_replace('-', '/', $id);
+
+        // jenisTemp
+        $jenisTemp = substr($uniqueId, 5, 2);
+
+        // ambil data detail yg diedit
+        $detail = PenjualanDetil::where('id_jual', $uniqueId)->get();
+
+        // ambil data Master
+        $master = Penjualan::where('id_jual', $uniqueId)->first();
+
+        // delete temp sebelumnya
+        $deleteMaster = PenjualanTemp::where('id_jual', $uniqueId)->first();
+        if ($deleteMaster) {
+            PenjualanDetilTemp::where('idPenjualanTemp', $deleteMaster->id)->delete();
+            PenjualanTemp::where('id_jual', $uniqueId)->delete();
+        }
+
+        $tempMaster = PenjualanTemp::create([
+            'jenisTemp' => 'Penjualan',
+            'id_jual' => $uniqueId,
+            'idSales' => Auth::user()->id,
+        ]);
+
+        // jika $tempMaster gagal return error
+        if(!isset($tempMaster->id))
+        {
+            return "error";
+        }
+
+        foreach ($detail as $temp) {
+            $detailTemp = PenjualanDetilTemp::create([
+                'idPenjualanTemp' => $tempMaster->id,
+                'idBarang' => $temp->id_produk,
+                'jumlah' => $temp->jumlah,
+                'harga' => $temp->harga,
+                'diskon' => $temp->diskon,
+                'sub_total' => $temp->sub_total
+            ]);
+        }
+        $data = [
+            'idTemp' => $tempMaster->id,
+            'idSales' => Auth::user()->id,
+            'namaSales' => Auth::user()->name,
+            'idPenjualan' => $uniqueId,
+            'idCustomer' => $master->id_cust,
+            'namaCustomer' => Customer::where('id_cust', $master->id_cust)->first()->nama_cust,
+            'tgl_nota' => date('d-m-Y' , strtotime($master->tgl_nota)),
+            'tgl_tempo' => (strtotime($master->tgl_tempo) > 0) ? date('d-m-Y' , strtotime($master->tgl_tempo)) : '',
+            'status_bayar' => $master->status_bayar,
+            'keterangan' => $master->keterangan,
+            'ppn' => $master->ppn,
+            'biaya_lain' => $master->biaya_lain,
+        ];
+        return view('pages.transaksi.penjualanTransaksiEdit', $data);
+        // var_dump($dataDetailPenjualan);
+    }
+
+    public function update(Request $request)
+    {
+        // variabel-variabel umum
+        $idPenjualan = $request->id_penjualan;
+        $idPenjualanTemp = $request->temp;
+        $tglPenjualan = date('Y-m-d', strtotime($request->tanggalNota));
+        $tglTempo = date('Y-m-d', strtotime($request->tanggalTempo));
+
+        // Ambil Data detail_penjualan_temp
+        $detilTemp = PenjualanDetilTemp::where('idPenjualanTemp', $idPenjualanTemp)->get();
+
+        $dataDetil = null;
+        foreach ($detilTemp as $row) {
+            $data = [
+                'id_jual' => $idPenjualan,
+                'id_produk' => $row->idBarang,
+                'jumlah' => $row->jumlah,
+                'harga' => $row->harga,
+                'diskon' => $row->diskon,
+                'sub_total' => $row->sub_total,
+            ];
+            $dataDetil [] = $data;
+            // $hitungData++;
+        }
+
+        // Data Penjualan untuk di insert ke Tabel Penjualan
+        $data = [
+            // 'activeCash' => session('ClosedCash'),
+            // 'id_jual' => $idPenjualan,
+            'tgl_nota' => $tglPenjualan,
+            'tgl_tempo' => ($request->statusBayar == 'Tunai') ? $tglTempo : null,
+            'status_bayar' => $request->statusBayar,
+            'sudahBayar'=> "belum", // pembuatan nota belum bayar
+            'total_jumlah' => $detilTemp->count(), // jumlah Item
+            'ppn' => $request->ppn,
+            'biaya_lain' => $request->biayaLain,
+            'total_bayar' => $detilTemp->sum('sub_total') + $request->ppn + $request->biayaLain, // total semua subtotal atau $request->hiddenTotalSemuanya
+            'id_cust' => $request->id_customer,
+            'id_user' => Auth::user()->id,
+            'keterangan' => $request->keterangan
+        ];
+
+        // transaction start
+        $jsonData = null;
+        DB::beginTransaction();
+        try {
+            $deleteDetail = PenjualanDetil::where('id_jual', $idPenjualan)->delete();
+            $insertDetail = PenjualanDetil::insert($dataDetil);
+            $insertMaster = Penjualan::where('id_jual', $idPenjualan)->update($data);
+            $deleteTempDetail = PenjualanDetilTemp::where('idPenjualanTemp', $idPenjualanTemp)->delete();
+            $deleteTempMaster = PenjualanTemp::where('id', $idPenjualanTemp)->delete();
+            DB::commit();
+            // session()->forget('penjualan'); // hapus session temp
             $jsonData = [
                 'status' => true,
                 'detail' => $insertDetail,

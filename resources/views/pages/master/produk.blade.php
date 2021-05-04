@@ -122,7 +122,7 @@
         </div>
 
         <x-slot name="footer">
-            <button type="button"  class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
+            <button type="button" id="btnClose" class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
             <button type="button" id="btnSubmit" class="btn btn-primary font-weight-bold">Save changes</button>
         </x-slot>
     </x-modals>

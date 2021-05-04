@@ -25,7 +25,7 @@ class CreatePenjualan extends Migration
             $table->integer('total_jumlah');
             $table->integer('ppn')->nullable();
             $table->integer('total_bayar');
-            $table->mediumText('keterangan');
+            $table->mediumText('keterangan')->nullable();
             $table->integer('print')->nullable();
             $table->softDeletes();
             $table->timestamps();

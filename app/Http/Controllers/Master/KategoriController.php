@@ -30,10 +30,10 @@ class KategoriController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('Actions', function($row){
-                    $btnEdit = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnEdit" data-value="'.$row->id.'" title="Edit"><i class="la la-edit"></i></a>';
-                    $btnSoft = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnSoft" data-value="'.$row->id.'" title="Delete"><i class="la la-trash"></i></a>';
-                    $btnRestore = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnRestore" data-value="'.$row->id.'" title="unDelete"><i class="fab fa-opencart"></i></a>';
-                    $btnForce = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnForce" data-value="'.$row->id.'" title="Delete"><i class="flaticon-delete-2"></i></a>';
+                    $btnEdit = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnEdit" data-value="'.$row->id_kategori.'" title="Edit"><i class="la la-edit"></i></a>';
+                    $btnSoft = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnSoft" data-value="'.$row->id_kategori.'" title="Delete"><i class="la la-trash"></i></a>';
+                    $btnRestore = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnRestore" data-value="'.$row->id_kategori.'" title="unDelete"><i class="fab fa-opencart"></i></a>';
+                    $btnForce = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnForce" data-value="'.$row->id_kategori.'" title="Delete"><i class="flaticon-delete-2"></i></a>';
                     return $btnEdit.$btnSoft.$btnRestore.$btnForce;
                 })
                 ->rawColumns(['Actions'])
@@ -42,8 +42,8 @@ class KategoriController extends Controller
             return DataTables::of($data)
                 ->addIndexColumn()
                 ->addColumn('Actions', function($row){
-                    $btnEdit = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnEdit" data-value="'.$row->id.'" title="Edit details"><i class="la la-edit"></i></a>';
-                    $btnSoft = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnSoft" data-value="'.$row->id.'" title="Delete"><i class="la la-trash"></i></a>';
+                    $btnEdit = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnEdit" data-value="'.$row->id_kategori.'" title="Edit details"><i class="la la-edit"></i></a>';
+                    $btnSoft = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnSoft" data-value="'.$row->id_kategori.'" title="Delete"><i class="la la-trash"></i></a>';
                     return $btnEdit.$btnSoft;
                 })
                 ->rawColumns(['Actions'])

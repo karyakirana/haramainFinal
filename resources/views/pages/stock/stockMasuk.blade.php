@@ -4,7 +4,7 @@
     </x-slot>
 
     <x-slot name="subHeader">
-        <x-sub-header title="Master" subTitle="Data Penjualan"></x-sub-header>
+        <x-sub-header title="Master" subTitle="Stock Masuk"></x-sub-header>
     </x-slot>
 
     {{-- begin::slot --}}
@@ -14,7 +14,7 @@
             <span class="card-icon">
                 <i class="flaticon2-supermarket text-primary"></i>
             </span>
-            <h3 class="card-label">Data Penjualan</h3>
+            <h3 class="card-label">Data Stock Masuk</h3>
         </x-slot>
 
         <x-slot name="toolbar">
@@ -39,19 +39,11 @@
         <table class="table table-bordered table-hover table-checkable" id="kt_datatable" style="margin-top: 13px !important">
             <thead>
             <tr>
-                <th>ID Transaksi</th>
-                <th>Pelanggan</th>
-                <th>Tanggal Nota</th>
-                <th>Jatuh Tempo</th>
-                <th>Status Bayar</th>
-                <th class="none">Sudah Bayar</th>
-                <th class="none">Total Barang</th>
-                <th class="none">Total Harga</th>
-                <th class="none">Biaya Lain</th>
-                <th>Total Tagihan</th>
-                <th class="none">Sales</th>
-                <th>Print</th>
-                <th>Last Print</th>
+                <th>Kode</th>
+                <th>Supplier</th>
+                <th>Pencatat</th>
+                <th>Tanggal Masuk</th>
+                <th>Nomor PO</th>
                 <th class="none">Keterangan</th>
                 <th></th>
             </tr>
@@ -67,7 +59,7 @@
         <script src="/assets/plugins/custom/datatables/datatables.bundle.js"></script>
         <!--end::Page Vendors-->
         <!--begin::Page Scripts(used by this page)-->
-        <script src="/pages/daftarPenjualan.js"></script>
+        <script src="/pages/stockMasuk.js"></script>
         <!--end::Page Scripts-->
     </x-slot>
 
