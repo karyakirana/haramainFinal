@@ -65,7 +65,7 @@ class SupplierController extends Controller
 
     public function kodeSupplier()
     {
-        $idSupplier = Supplier::latest()->first();
+        $idSupplier = Supplier::withTrashed()->latest()->first();
         $num;
         if(!$idSupplier)
         {
@@ -109,7 +109,13 @@ class SupplierController extends Controller
      */
     public function edit($id)
     {
-        $data = Supplier::find($id)->first();
+        $data = Supplier::leftJoin('jenissupplier as js', 'supplier.jenisSupplier', '=', 'js.id')
+            ->select(
+                'supplier.id as idSupplier', 'jenisSupplier', 'namaSupplier', 'alamatSupplier',
+                'tlpSupplier', 'keteranganSupplier',
+                'js.jenis as jenis'
+            )
+            ->find($id);
         return json_encode($data);
     }
 

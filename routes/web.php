@@ -120,6 +120,7 @@ Route::middleware(['auth'])->group(function(){
     Route::patch('/stock/temp/produk', 'Stock\StockTempController@daftarProduk');
     Route::patch('/stock/temp/supplier', 'Stock\StockTempController@daftarSupplier');
     Route::get('/stock/temp/produk/{id}', 'Stock\StockTempController@setProduk');
+    Route::get('/stock/detil/{id}', 'Stock\StockTempController@edit');
 
     Route::patch('/stock/detil/{id}', 'Stock\StockTempController@daftarDetil');
     Route::post('/stock/temp/simpan', 'Stock\StockTempController@store');

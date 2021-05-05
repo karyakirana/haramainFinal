@@ -107,7 +107,8 @@ $('#btnNew').on("click",function(){
     $('#modalCrud').modal('show'); // show bootstrap modal
     $('#modalCrud').on('shown.bs.modal', function(){
         select2jenis();
-        $('#jenisSupplier').val(null).trigger('change');
+        var newOption = new Option('', '', false, false);
+        $('#jenisSupplier').append(newOption).trigger('change');
     });
 });
 
@@ -160,22 +161,22 @@ $('body').on("click", '#btnEdit', function(){
         success : function (data) {
             $('#formModal').trigger('reset'); // reset form on modals
             // insert value
-            $('[name="id"]').val(data.id);
+            $('[name="id"]').val(data.idSupplier);
             $('[name="nama"]').val(data.namaSupplier);
-            $('[name="alamatSupplier"]').val(data.alamatSupplier);
+            $('[name="alamat"]').val(data.alamatSupplier);
             $('[name="telepon"]').val(data.tlpSupplier);
             $('[name="npwp"]').val(data.npwpSupplier);
             $('[name="email"]').val(data.emailSupplier);
             $('[name="keterangan"]').val(data.keteranganSupplier);
             $('#modalCrud').modal('show'); // show bootstrap modal
-            $('#formModal').on('shown.bs.modal', function(){
+            $('#modalCrud').on('shown.bs.modal', function(){
                 select2jenis();
             });
             var dataSelect2 = {
                 text: data.jenis,
-                id: data.idJenis,
+                id: data.jenisSupplier,
             }
-            var newOption = new Option(dataSelect2.text, dataSelect2.id, false, false);
+            var newOption = new Option(dataSelect2.text, dataSelect2.id, false, true);
             $('#jenisSupplier').append(newOption).trigger('change');
         },
         error : function (jqXHR, textStatus, errorThrown)

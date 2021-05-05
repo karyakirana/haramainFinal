@@ -223,7 +223,7 @@ $('body').on("click", '#btnAddSupplier', function(){
         dataType : "JSON",
         success : function (data) {
             // insert value
-            $('[name="id_supplier"]').val(data.id);
+            $('[name="id_supplier"]').val(data.idSupplier);
             $('[name="supplier"]').val(data.namaSupplier);
             $('#modalDaftarSupplier').modal('hide');
         },
@@ -324,6 +324,33 @@ $('#tambahBtn').on('click', function (){
                 $("#alertText").empty();
                 $("#alertText").append("<li>"+`${jqXHR.responseJSON.errors[property]}`+"</li>");
             }
+        }
+    });
+})
+
+$('body').on("click", "#btnEdit", function (){
+
+    var dataEdit = $(this).data("value");
+
+    $.ajax({
+        headers : {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+        url : HOST_me+"/stock/detil/"+dataEdit,
+        method: "GET",
+        dataType : "JSON",
+        success : function (data) {
+            $('#formProduk').trigger('reset'); // reset form on modals
+            // insert value
+            $('[name="idDetil"]').val(data.id);
+            $('[name="idProduk"]').val(data.produkId);
+            $('[name="namaProduk"]').val(data.nama_produk+'\n'+data.idLokal+'\n'+data.cover);
+            $('[name="kategoriHarga"]').val(data.kategoriHarga);
+            $('[name="jumlah"]').val(data.jumlah);
+        },
+        error : function (jqXHR, textStatus, errorThrown)
+        {
+            swal.fire({
+                html: jqXHR.responseJSON.message+"<br><br>"+jqXHR.responseJSON.file+"<br><br>Line: "+jqXHR.responseJSON.line,
+            });
         }
     });
 })

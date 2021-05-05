@@ -53,7 +53,7 @@ class KategoriHargaController extends Controller
 
     public function idKategoriharga()
     {
-        $idKategori = KategoriHarga::orderBy('id_kat_harga', 'desc')->first();
+        $idKategori = KategoriHarga::withTrashed()->orderBy('id_kat_harga', 'desc')->first();
         $num;
         if(!$idKategori)
         {
