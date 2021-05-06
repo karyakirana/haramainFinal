@@ -99,7 +99,7 @@
                 })
                 console.log(subTotal);
                 barisUtama += garis(135)+'\n';
-                barisUtama += getEscTable('Keterangan : ' + ((utama.keterangan) ? utama.keterangan : '-'), 14, 'left')+'\n';
+                barisUtama += getEscTable('Keterangan : ' + ((utama.penket) ? utama.penket : '-'), 14, 'left')+'\n';
                 barisUtama += getEscTable(garis(60), 137, 'right')+'\n';
                 barisUtama += getEscTable('Disiapkan Oleh', 30, 'center')+getEscTable('Disetujui Oleh', 30, 'center')+getEscTable('', 16, 'center')+ getEscTable('Sub Total', 15, 'left') +':'+getEscTable( 'Rp. '+ numberWithCommas(numberWithCommas(subTotal)), 42, 'right')+'\n';
                 barisUtama += getEscTable('', 76, 'center')+getEscTable('PPN', 15, 'left') +':'+getEscTable( 'Rp. '+ ((utama.ppn) ? numberWithCommas(utama.ppn) : '' ), 42, 'right')+'\n';
@@ -120,7 +120,7 @@
                 barisUtama = esc_init+alt_cond_on+set_font_1 +esc_p;
                 barisUtama += alt_cond_off+bold_on+ esc_ul_on+getEscTable('Nota Penjualan', 15, 'left')+ bold_off+esc_ul_off+alt_cond_on +bold_on+ getEscTable('Colly =', 56, 'left')+bold_off + getEscTable("Surabaya : "+ utama.tgl_nota, 27, 'left')+'\n';
                 barisUtama += getEscTable('', 40, 'left')+ getEscTable('', 50, 'left') + getEscTable('Kepada Yth, : ' +utama.namaCustomer, 47, 'left')+'\n';
-                barisUtama += getEscTable('', 30, 'left')+ getEscTable('', 70, 'left') + getEscTable(utama.addr_cust, 27, 'left')+'\n';
+                barisUtama += getEscTable('', 20, 'left')+ getEscTable('', 60, 'left') + getEscTable(utama.addr_cust, 27, 'center')+'\n';
                 // barisUtama += getEscTable('Colly = ..........', 20, 'left')+ '\n';
                 barisUtama += getEscTable('Nomor : ', 10, 'left')+alt_cond_off+bold_on+getEscTable('' + utama.penjualanId, 15, 'left') + bold_off+alt_cond_on+ getEscTable("Jatuh Tempo : "+ utama.tgl_tempo, 56, 'right') +'\n';
                 barisUtama += garis(135)+'\n';
@@ -136,7 +136,7 @@
                 })
                 console.log(subTotal);
                 barisUtama += garis(135)+'\n';
-                barisUtama += getEscTable('Keterangan : ' + ((utama.penket) ? utama.keterangan : '-'), 14, 'left')+'\n';
+                barisUtama += getEscTable('Keterangan : ' + ((utama.penket) ? utama.penket : '-'), 14, 'left')+'\n';
                 barisUtama += getEscTable(garis(60), 137, 'right')+'\n';
                 barisUtama += getEscTable('Disiapkan Oleh', 30, 'center')+getEscTable('Disetujui Oleh', 30, 'center')+getEscTable('', 16, 'center')+ getEscTable('Sub Total', 15, 'left') +':'+getEscTable( 'Rp. '+ numberWithCommas(numberWithCommas(subTotal)), 42, 'right')+'\n';
                 barisUtama += getEscTable('', 76, 'center')+getEscTable('PPN', 15, 'left') +':'+getEscTable( 'Rp. '+ ((utama.ppn) ? numberWithCommas(utama.ppn) : '' ), 42, 'right')+'\n';

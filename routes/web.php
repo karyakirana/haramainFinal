@@ -125,6 +125,17 @@ Route::middleware(['auth'])->group(function(){
     Route::patch('/stock/detil/{id}', 'Stock\StockTempController@daftarDetil');
     Route::post('/stock/temp/simpan', 'Stock\StockTempController@store');
     Route::delete('/stock/temp/produk/{id}', 'Stock\StockTempController@destroy');
+
+    // pembayaran
+    Route::get('/kasir/pembayaran/data', 'Kasir\PembayaranController@index');
+    Route::patch('/kasir/pembayaran/data', 'Kasir\PembayaranController@daftarPembayaran');
+    Route::post('/kasir/pembayaran/data', 'Kasir\PembayaranController@store')->name('submitPembayaran');
+
+    Route::get('/kasir/pembayaran/baru', 'Kasir\PembayaranController@create');
+    Route::patch('/kasir/pembayaran/penjualan', 'Kasir\PembayaranController@daftarPenjualan');
+    Route::get('/kasir/pembayaran/edit/{id}', 'Kasir\PembayaranController@edit');
+    Route::delete('/kasir/pembayaran/delete/{id}', 'Kasir\PembayaranController@destroy');
+
 });
 
 //require __DIR__.'/auth.php';
