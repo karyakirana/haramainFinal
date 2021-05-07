@@ -19,7 +19,7 @@
         <table class="table table-bordered table-hover table-checkable" id="kt_datatable" style="margin-top: 13px !important">
             <thead>
             <tr>
-                <th>ID</th>
+{{--                <th>ID</th>--}}
                 <th>Kode</th>
                 <th>Tgl Pembayaran</th>
                 <th>ID Penjualan</th>
@@ -73,7 +73,7 @@
                             },
                         },
                         columns: [
-                            {data: 'kode'},
+                            // {data: 'kode'},
                             {data: 'kodeInternal'},
                             {data: 'tglPembayaran'},
                             {data: 'idPenjualan'},
