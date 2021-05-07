@@ -83,7 +83,7 @@ class PembayaranController extends Controller
             } else {
                 $awalan = 1;
             }
-            $nomor = sprintf("%04s", $awalan).'/'.date('m', $tanggal)."/BYR/".date('Y', $tanggal);
+            $nomor = sprintf("%04s", $awalan).'/'.$bulan."/BYR/".date('Y', $tanggal);
         } else {
             $nomor = "0001/".date('m', $tanggal)."/BYR/".date('Y', $tanggal);
         }
