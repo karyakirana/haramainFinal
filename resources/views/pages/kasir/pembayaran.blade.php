@@ -79,7 +79,7 @@
                             {data: 'idPenjualan'},
                             {data: 'jenisBayar'},
                             {data: 'name'},
-                            {data: 'nominal'},
+                            {data: 'nominal', render : $.fn.dataTable.render.number( '.', ',', 0, 'Rp. ')},
                             {data: 'Actions', responsivePriority: -1},
                         ],
                         columnDefs: [
