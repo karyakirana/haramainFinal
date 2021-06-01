@@ -268,6 +268,7 @@ class PenjualanController extends Controller
         // $dataPenjualan = Penjualan::where('id_jual', $idPenjualan)->first();
         // $dataPenjualanDetail = PenjualanDetail::where('id_jual', $idPenjualan)->get();
         $dataPenjualanDetail = PenjualanDetil::leftJoin('produk', 'detil_penjualan.id_produk', '=', 'produk.id_produk')
+            ->whereNull('detil_penjualan.updated_at')
             ->where('id_jual', $idPenjualan)
             ->get();
         $data = [

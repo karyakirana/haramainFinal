@@ -158,7 +158,7 @@
                                 <label class="col-md-4 col-form-label" for="diskon">Diskon</label>
                                 <div class="col-md-8">
                                     <div class="input-group">
-                                        <input class="form-control" type="text" id="diskon" name="diskon">
+                                        <input class="form-control" data-inputmask="'alias' : 'decimal', 'groupSeparator': ','" type="text" id="diskon" name="diskon">
                                         <div class="input-group-append">
                                             <span class="input-group-text">%</span>
                                         </div>

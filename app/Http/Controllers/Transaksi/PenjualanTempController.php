@@ -85,12 +85,15 @@ class PenjualanTempController extends Controller
             ->addColumn('namaBarang', function($row){
                 return $row->nama_produk;
             })
+            ->addColumn('Diskon', function ($row){
+                return $row->diskon."%";
+            })
             ->addColumn('Actions', function ($row){
                 $btnEdit = '<button class="btn btn-sm btn-clean btn-icon" id="btnEdit" data-value="'.$row->id.'" title="Edit details"><i class="la la-edit"></i></button>';
                 $btnSoft = '<button class="btn btn-sm btn-clean btn-icon" id="btnSoft" data-value="'.$row->id.'" title="Delete"><i class="la la-trash"></i></button>';
                 return $btnEdit.$btnSoft;
             })
-            ->rawColumns(['namaBarang', 'Actions'])
+            ->rawColumns(['namaBarang', 'Diskon','Actions'])
             ->make(true);
     }
 
@@ -98,9 +101,9 @@ class PenjualanTempController extends Controller
     {
         $request->validate([
             'jumlah' => 'required|int',
-            'diskon' => 'required|int',
+            'diskon' => 'required|numeric',
         ]);
-        $diskon = $request->diskon / 100;
+        $diskon = ((float) $request->diskon) / 100;
         $harga = $request->harga;
         $hargaDiskon = $harga - ($harga * $diskon);
         $subTotal = $hargaDiskon * $request->jumlah;

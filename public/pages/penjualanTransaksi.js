@@ -143,7 +143,7 @@ $('body').on("click", '#btnAddProduk', function(){
             $('[name="namaProduk"]').val(data.nama_produk+'\n'+data.idLokal+'\n'+data.cover+'\n'+stock);
             $('[name="kategoriHarga"]').val(data.kategoriHarga);
             $('[name="harga"]').val(data.harga);
-            $('[name="diskon"]').val($('[name="diskonCustomer"]').val())
+            $('[name="diskon"]').val(diskon)
             $('[name="hargaDiskon"]').val(harga - (harga * diskon / 100));
             $('#modalDaftarProduk').modal('hide');
         },
@@ -260,15 +260,15 @@ $('body').on('keyup', '#jumlah', function (){
 $('body').on('keyup', '#diskon', function (){
 
     var harga = $('[name="harga"]').val();
-    var diskon = $('[name="diskon"]').val();
+    var diskon = ($('[name="diskon"]').val()).replace(/,/g, '.');
 
-    var hasil = harga - (harga * diskon / 100);
+    var hasil = parseInt(harga - (harga * parseFloat(diskon) / 100));
     $('#hargaDiskon').val(hasil);
 
     var hargaDiskon = $('[name="hargaDiskon"]').val();
     var jumlah = $('[name="jumlah"]').val();
 
-    var hasil = hargaDiskon * jumlah;
+    hasil = hargaDiskon * jumlah;
     $('#subTotal').val(hasil);
 
 });
@@ -306,7 +306,7 @@ var detilTable = function(){
                 // {data: 'kode_lokal'},
                 {data: 'harga'},
                 {data: 'jumlah'},
-                {data: 'diskon'},
+                {data: 'diskon', render : $.fn.dataTable.render.number( '.', ',', 2, '', ' %')}, // default diskon
                 {data: 'sub_total'},
                 {data: 'Actions', responsivePriority: -1},
             ],
@@ -314,6 +314,10 @@ var detilTable = function(){
                 {
                     targets : [-1],
                     orderable: false
+                },
+                {
+                    targets: [1,4],
+                    render : $.fn.dataTable.render.number( '.', ',', 0, 'Rp. '),
                 }
             ],
         });
