@@ -32,9 +32,9 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 {data: 'status_bayar'}, // status bayar
                 {data: 'sudahBayar'}, // sudah bayar
                 {data: 'total_jumlah'}, // total barang
-                {data: 'ppn'}, // ppn
-                {data: 'biaya_lain'}, // biaya lain
-                {data: 'total_bayar'}, // total tagihan
+                {data: 'ppn', render : $.fn.dataTable.render.number( '.', ',', 0, 'Rp. ')}, // ppn
+                {data: 'biaya_lain', render : $.fn.dataTable.render.number( '.', ',', 0, 'Rp. ')}, // biaya lain
+                {data: 'total_bayar', render : $.fn.dataTable.render.number( '.', ',', 0, 'Rp. ')}, // total tagihan
                 {data: 'namaSales', name: 'namaSales'}, // Nama Sales
                 {data: 'print'}, // print
                 {data: 'update'}, // jumlah print
