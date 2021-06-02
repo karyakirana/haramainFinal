@@ -95,17 +95,18 @@
         </x-slot>
     </x-metronics-card>
 
-    <x-modals modalId="modalCrud" formId="formModal">
+    <x-modals modalId="modalCrud" formId="formModal" ukuran="besar">
         <table class="table table-bordered table-hover table-checkable" id="kt_datatable" style="margin-top: 13px !important">
             <thead>
             <tr>
-                <th>ID</th>
+                <th width="15%">Nomor Nota</th>
+                <th>Customer</th>
                 <th>Tanggal Nota</th>
                 <th>Tanggal Tempo</th>
                 <th>Status Bayar</th>
                 <th>Jumlah Bayar</th>
-                <th>Keterangan</th>
-                <th>Actions</th>
+                <th class="none">Keterangan</th>
+                <th width="5%">Actions</th>
             </tr>
             </thead>
         </table>
@@ -137,6 +138,7 @@
                         searchDelay: 500,
                         processing: true,
                         serverSide: true,
+                        autoWidth: false,
                         order : [],
                         ajax: {
                             headers : {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
@@ -151,12 +153,13 @@
                         },
                         columns: [
                             {data: 'id_jual'},
-                            {data: 'tgl_nota'},
-                            {data: 'tgl_tempo'},
+                            {data: 'nama_cust'},
+                            {data: 'tglNota'},
+                            {data: 'tglTempo'},
                             {data: 'status_bayar'},
-                            {data: 'total_jumlah'},
+                            {data: 'total_bayar', render: $.fn.dataTable.render.number( '.', ',', 0, 'Rp. ')},
                             {data: 'penket'},
-                            {data: 'Actions', responsivePriority: -1},
+                            {data: 'Actions', width : "5%",responsivePriority: -1},
                         ],
                         columnDefs: [
                             {

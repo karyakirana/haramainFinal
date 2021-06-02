@@ -51,16 +51,23 @@ class PembayaranController extends Controller
         $data = Penjualan::leftJoin('customer as c', 'penjualan.id_cust', '=', 'c.id_cust')
             ->select(
                 'id_jual', 'tgl_nota', 'tgl_tempo', 'status_bayar',
-                'total_jumlah', 'penjualan.keterangan as penket',
+                'total_jumlah', 'total_bayar', 'penjualan.keterangan as penket',
                 'nama_cust'
             )
             ->orderBy('id_jual', 'desc')->get();
         return DataTables::of($data)
             ->addColumn('Actions', function ($row){
-                $btnEdit = '<button type="button" class="btn btn-sm btn-clean btn-icon" onclick="setPenjualan('."'".$row->id_jual."'".')"><i class="la la-edit"></i></button>';
+                $btnEdit = '<button type="button" class="btn btn-sm btn-clean btn-icon" onclick="setPenjualan('."'".$row->id_jual."'".')"><i class="flaticon-add"></i></button>';
                 return $btnEdit;
             })
-            ->rawColumns(['Actions'])
+            ->addColumn('tglNota', function($row){
+                return date('d-m-Y', strtotime($row->tgl_nota));
+            })
+            ->addColumn('tglTempo', function($row){
+                $yoman = (strtotime($row->tgl_tempo) > 946659600) ? date('d-m-Y', strtotime($row->tgl_tempo)) : "";
+                return $yoman;
+            })
+            ->rawColumns(['Actions', 'tglNota', 'tglTempo'])
             ->make(true);
     }
 
