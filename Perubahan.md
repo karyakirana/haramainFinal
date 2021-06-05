@@ -1,6 +1,7 @@
 # Aplikasi Haramain
 
 Aplikasi ini berisi tentang ERP proses bisnis UD. Haramain yang dikerjakan dengan target setahun masa percobaan dan penambahan fitur pada tahun berikutnya.
+Aplikasi ini memiliki roots pada Accurate 5 desktop version (Enterprise)
 
 ## Fitur atau Sub App Aplikasi Haramain
 

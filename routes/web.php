@@ -107,6 +107,7 @@ Route::middleware(['auth'])->group(function(){
 
     // print
     Route::get('/print/penjualan/{id}', 'Transaksi\PenjualanController@print');
+    Route::get('/print/penjualan/{id}/pdf', 'Transaksi\PenjualanController@printPdf');
 
     Route::get('/stock/masuk', 'Stock\StockMasukController@index');
     Route::post('/stock/masuk', 'Stock\StockMasukController@store');
