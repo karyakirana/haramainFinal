@@ -137,6 +137,10 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/kasir/pembayaran/edit/{id}', 'Kasir\PembayaranController@edit');
     Route::delete('/kasir/pembayaran/delete/{id}', 'Kasir\PembayaranController@destroy');
 
+    // Preoder
+    Route::get('predorder/data', 'Preoder\PreorderController@index'); // index menampilkan data preorder
+    Route::get('preoder/baru', 'Preorder\PreorderController@create');
+
 });
 
 //require __DIR__.'/auth.php';

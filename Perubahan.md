@@ -39,6 +39,10 @@ Sistem ini memiliki sub sistem sebagai berikut :
 - Sub Sistem Penomoran Akuntansi terkait dengan transaksi keuangan (sehingga terintegrasi dengan sistem akuntansi)
 
 ### Sistem Permintaan Barang kepada pihak ke-3 (Supplier)
+- Sistem input Supplier (Sudah ada)
+- Sistem input pre order dan print menggunakan dot matrix
+- Sistem pengiriman PO
+
 ### Akuntansi
 Akuntansi merupakan sistem informasi yang menyajikan dalam bentuk laporan keuangan meliputi :
 - Laporan Arus Kas (Cash Flow)
