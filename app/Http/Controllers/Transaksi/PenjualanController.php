@@ -331,10 +331,11 @@ class PenjualanController extends Controller
             ->where('id_jual', $idPenjualan)
             ->get();
         $data = [
-            'dataUtama' => json_encode($dataPenjualan),
+            'dataUtama' => (object) $dataPenjualan,
             'dataDetail' => $dataPenjualanDetail
         ];
         $pdf = PDF::loadView('pages.report.invoicePdf', $data);
+        $pdf->setPaper([0,0,684,396], 'potrait');
         return $pdf->stream();
     }
 
