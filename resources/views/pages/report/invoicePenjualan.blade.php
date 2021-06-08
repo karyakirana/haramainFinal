@@ -44,12 +44,12 @@
             var barisDetail = '';
 
             var utama = {!!$dataUtama!!};
-            // console.log(utama);
+            console.log(utama);
 
 
 
             var detail = {!!$dataDetail!!};
-            // console.log(detail);
+            console.log(detail);
             console.log(barisUtama);
 
             detail.forEach(function(element){
@@ -93,7 +93,7 @@
 
 
                 detail.forEach(function(data){
-                    barisUtama += ' '+getEscTable(data.kode_lokal, 9, 'left')+getEscTable(data.nama_produk, 60, 'left')+getEscTable((data.jumlah).toString(), 5, 'right')+getEscTable(numberWithCommas(data.harga), 20, 'right')+"     "
+                    barisUtama += ' '+getEscTable((data.kode_lokal) ? data.kode_lokal : '', 9, 'left')+getEscTable(data.nama_produk, 60, 'left')+getEscTable((data.jumlah).toString(), 5, 'right')+getEscTable(numberWithCommas(data.harga), 20, 'right')+"     "
                         +getEscTable((data.diskon).toString(), 5, 'center')+getEscTable(numberWithCommas(data.sub_total), 28, 'right')+'\n';
                     subTotal += data.sub_total;
                 })
@@ -130,7 +130,7 @@
 
 
                 detail.forEach(function(data){
-                    barisUtama += ' '+getEscTable(data.kode_lokal, 9, 'left')+getEscTable(data.nama_produk, 60, 'left')+getEscTable((data.jumlah).toString(), 5, 'center')+getEscTable(numberWithCommas(data.harga), 20, 'right')+"     "
+                    barisUtama += ' '+getEscTable((data.kode_lokal) ? data.kode_lokal : '', 9, 'left')+getEscTable(data.nama_produk, 60, 'left')+getEscTable((data.jumlah).toString(), 5, 'center')+getEscTable(numberWithCommas(data.harga), 20, 'right')+"     "
                         +getEscTable((data.diskon).toString(), 5, 'center')+getEscTable(numberWithCommas(data.sub_total), 28, 'right')+'\n';
                     subTotal += data.sub_total;
                 })
