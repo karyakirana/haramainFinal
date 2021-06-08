@@ -141,6 +141,13 @@ Route::middleware(['auth'])->group(function(){
     Route::get('predorder/data', 'Preoder\PreorderController@index'); // index menampilkan data preorder
     Route::get('preoder/baru', 'Preorder\PreorderController@create');
 
+    /*
+     * Route Akuntansi
+     */
+
+    // Daftar akuntansi
+
+
 });
 
 //require __DIR__.'/auth.php';
