@@ -150,4 +150,6 @@ Route::middleware(['auth'])->group(function(){
 
 });
 
+require __DIR__.'/akuntansi.php';
+
 //require __DIR__.'/auth.php';

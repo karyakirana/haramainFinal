@@ -11,6 +11,6 @@ class KategoriAkun extends Model
 
     protected $table = 'kategori_akuntansi';
     protected $fillable = [
-        'namaAkun', 'deskripsi'
+        'kode', 'namaAkun', 'deskripsi'
     ];
 }
