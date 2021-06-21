@@ -109,24 +109,6 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/print/penjualan/{id}', 'Transaksi\PenjualanController@print');
     Route::get('/print/penjualan/{id}/pdf', 'Transaksi\PenjualanController@printPdf');
 
-    Route::get('/stock/masuk', 'Stock\StockMasukController@index');
-    Route::post('/stock/masuk', 'Stock\StockMasukController@store');
-    Route::put('/stock/masuk', 'Stock\StockMasukController@update');
-    Route::patch('/stock/masuk', 'Stock\StockMasukController@daftarStockMasuk');
-
-    // Stock Masuk Baru
-    Route::get('/stock/masuk/baru', 'Stock\StockMasukController@create');
-    Route::get('/stock/masuk/edit/{id}', 'Stock\StockMasukController@edit');
-
-    Route::patch('/stock/temp/produk', 'Stock\StockTempController@daftarProduk');
-    Route::patch('/stock/temp/supplier', 'Stock\StockTempController@daftarSupplier');
-    Route::get('/stock/temp/produk/{id}', 'Stock\StockTempController@setProduk');
-    Route::get('/stock/detil/{id}', 'Stock\StockTempController@edit');
-
-    Route::patch('/stock/detil/{id}', 'Stock\StockTempController@daftarDetil');
-    Route::post('/stock/temp/simpan', 'Stock\StockTempController@store');
-    Route::delete('/stock/temp/produk/{id}', 'Stock\StockTempController@destroy');
-
     // pembayaran
     Route::get('/kasir/pembayaran/data', 'Kasir\PembayaranController@index');
     Route::patch('/kasir/pembayaran/data', 'Kasir\PembayaranController@daftarPembayaran');
@@ -151,5 +133,6 @@ Route::middleware(['auth'])->group(function(){
 });
 
 require __DIR__.'/akuntansi.php';
+require __DIR__.'/stock.php';
 
 //require __DIR__.'/auth.php';

@@ -28,12 +28,18 @@ class KategoriAkunController extends Controller
         return DataTables::of($data)
             ->addIndexColumn()
             ->addColumn('Actions', function($row){
-                $btnEdit = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnEdit" data-value="'.$row->id.'" title="Edit details"><i class="la la-edit"></i></a>';
-                $btnSoft = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnSoft" data-value="'.$row->id.'" title="Delete"><i class="la la-trash"></i></a>';
+                $btnEdit = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnEdit" onClick="edit('."'".$row->id."'".')" data-value="'.$row->id.'" title="Edit details"><i class="la la-edit"></i></a>';
+                $btnSoft = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnSoft" onClick="destroy('."'".$row->id."'".')" data-value="'.$row->id.'" title="Delete"><i class="la la-trash"></i></a>';
                 return $btnEdit.$btnSoft;
             })
             ->rawColumns(['Actions'])
             ->make(true);
+    }
+
+    public function edit($id)
+    {
+        $data = KategoriAkun::find($id);
+        return response()->json($data);
     }
 
     /**
@@ -44,12 +50,13 @@ class KategoriAkunController extends Controller
     public function store(Request $request)
     {
         $data = [
+            'kode' => $request->kode,
             'namaAkun' => $request->namaAkun,
-            'deksripsi' => $request->deskripsi,
+            'deskripsi' => $request->keterangan,
         ];
 
-        $simpan = KategoriAkun::updateOrCreate($data, [id=>$request->id]);
-        return json_encode(['hasil'=>true, 'simpan'=>$simpan]);
+        $simpan = KategoriAkun::updateOrCreate(['id'=>$request->id], $data);
+        return json_encode(['status'=>true, 'simpan'=>$simpan]);
     }
 
     /**

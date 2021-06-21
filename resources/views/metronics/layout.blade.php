@@ -440,6 +440,7 @@
 <script src="/assets/js/scripts.bundle.js"></script>
 <!--end::Global Theme Bundle-->
 {{ $scripts }}
+@stack('scripts')
 </body>
 <!--end::Body-->
 </html>

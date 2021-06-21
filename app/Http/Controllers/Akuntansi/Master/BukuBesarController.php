@@ -27,4 +27,27 @@ class BukuBesarController extends Controller
             ->rawColumns(['Actions'])
             ->make(true);
     }
+
+    public function store(Request $request)
+    {
+        $data = [
+            'kategoriAkuntansi' => $request->kategori,
+            'kodeAkun'=> $request->kodeAkun,
+            'keterangan' => $request->keterangan,
+        ];
+        $status = BukuBesarAkun::updateOrCreate(['id'=>$request->id], $data);
+        return response()->json(['status'=>true, 'hasil'=>$status]);
+    }
+
+    public function edit($id)
+    {
+        $data = BukuBesarAkun::find($id);
+        return response()->json($data);
+    }
+
+    public function destroy($id)
+    {
+        $destroy = BukuBesarAkun::destroy($id);
+        return response()->json(['status'=>true, 'hasil'=>$destroy]);
+    }
 }
