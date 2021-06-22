@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Stock;
 
 use App\Http\Controllers\Controller;
 use App\Models\Master\Supplier;
+use App\Models\Stock\Branch;
 use App\Models\Stock\StockDetilTemp;
 use App\Models\Stock\StockMasuk;
 use App\Models\Stock\StockMasukDetil;
@@ -26,11 +27,13 @@ class StockMasukController extends Controller
     {
         $data = StockMasuk::leftJoin('supplier as s', 'stockmasuk.idSupplier', '=', 's.id')
             ->leftJoin('users as u', 'stockmasuk.idUser', '=', 'u.id')
+            ->leftJoin('branch_stock as bs', 'stockMasuk.idBranch', "=", 'bs.id')
             ->select(
-                'stockmasuk.id as stockmasukId', 'kode', 'tglMasuk', 'nomorPo', 'keterangan',
+                'stockmasuk.id as stockmasukId', 'kode', 'tglMasuk', 'nomorPo', 'stockmasuk.keterangan as keterangan',
                 'stockmasuk.created_at as created_at',
                 's.namaSupplier as namaSupplier',
-                'u.name as name'
+                'u.name as name',
+                'bs.branchName as gudang'
             )
             ->latest()->get();
         return DataTables::of($data)
@@ -101,7 +104,8 @@ class StockMasukController extends Controller
                 'kode' => $this->idStockMasuk(),
             ];
         }
-        return view('pages.stock.stockMasukBaru', $data);
+        $branch = Branch::all();
+        return view('pages.stock.stockMasukBaru', $data)->with(['branch'=>$branch]);
     }
 
     public function store(Request $request)
@@ -212,6 +216,8 @@ class StockMasukController extends Controller
             'tglMasuk' => date('d-m-Y', strtotime($master->tglMasuk)),
             'nomorPo' => ($master->nomorPo) ? $master->nomorPo : '',
             'keterangan' => $master->keterangan,
+            'idBranch' => $master->idBranch,
+            'branch'=>Branch::all()
         ];
 
         return view('pages.stock.stockMasukEdit', $data);

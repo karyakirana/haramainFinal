@@ -40,6 +40,7 @@
             <thead>
             <tr>
                 <th>Kode</th>
+                <th>Gudang</th>
                 <th>Supplier</th>
                 <th>Pencatat</th>
                 <th>Tanggal Masuk</th>

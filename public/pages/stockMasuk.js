@@ -19,12 +19,13 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 data: {
                     // parameters for custom backend script demo
                     columnsDef: [
-                        'stockmasukId', 'kode', 'tglNota', 'namaSupplier', 'name', 'tglMasuk', 'nomorPo',
+                        'stockmasukId', 'kode', 'tglNota', 'namaSupplier', 'name', 'tglMasuk', 'nomorPo' ,'gudang',
                     ],
                 },
             },
             columns: [
                 {data: 'kode'},
+                {data: 'gudang'},
                 {data: 'namaSupplier'},
                 {data: 'name'},
                 {data: 'tglMasuk'},

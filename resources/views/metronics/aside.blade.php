@@ -394,6 +394,14 @@
                                     <span class="menu-text">Stock Masuk</span>
                                 </a>
                             </li>
+                            <li class="menu-item {{ (request()->is('stock/branch')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                <a href="/stock/branch" class="menu-link">
+                                    <i class="menu-bullet menu-bullet-line">
+                                        <span></span>
+                                    </i>
+                                    <span class="menu-text">Daftar Gudang</span>
+                                </a>
+                            </li>
                         </ul>
                     </div>
                 </li>

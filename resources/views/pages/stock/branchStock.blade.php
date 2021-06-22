@@ -40,7 +40,9 @@
             <thead>
             <tr>
                 <th>Nomor</th>
-                <th>Jenis Supplier</th>
+                <th>Gudang</th>
+                <th>Alamat</th>
+                <th>Kota</th>
                 <th>Keterangan</th>
                 <th>Actions</th>
             </tr>
@@ -53,9 +55,21 @@
     <x-modals modalId="modalCrud" formId="formModal">
         <input type="text" name="id" hidden>
         <div class="form-group row">
-            <label class="col-2 col-form-label">Jenis Supplier</label>
+            <label class="col-2 col-form-label">Gudang</label>
             <div class="col-10">
-                <input class="form-control" type="text" name="jenis">
+                <input class="form-control" type="text" name="namaGudang">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-2 col-form-label">Alamat</label>
+            <div class="col-10">
+                <input class="form-control" type="text" name="alamat">
+            </div>
+        </div>
+        <div class="form-group row">
+            <label class="col-2 col-form-label">Kota</label>
+            <div class="col-10">
+                <input class="form-control" type="text" name="kota">
             </div>
         </div>
         <div class="form-group row">
@@ -96,18 +110,20 @@
             order : [],
             ajax: {
                 headers : {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                url: '{{ route('branchList') }}',
+                url: "{{ route('branchList') }}",
                 type: 'PATCH',
                 data: {
                     // parameters for custom backend script demo
                     columnsDef: [
-                        'id_cust', 'nama_cust',
-                        'telp_cust'],
+                        'branchName', 'alamat', 'kota'
+                    ],
                 },
             },
             columns: [
                 {data: 'DT_RowIndex'},
-                {data: 'jenis'},
+                {data: 'branchName'},
+                {data: 'alamat'},
+                {data: 'kota'},
                 {data: 'keterangan'},
                 {data: 'Actions', responsivePriority: -1},
             ],
@@ -134,22 +150,27 @@
             })
         };
 
-        var saveMethod;
+        let saveMethod;
+
+        function emptyValidation()
+        {
+            $('.invalid-feedback').remove();
+            $("#alertText").empty();
+        }
 
         $('#btnNew').on("click",function(){
             saveMethod = 'add';
+            emptyValidation()
             $('#formModal').trigger('reset'); // reset form on modals
             $('#modalCrud').modal('show'); // show bootstrap modal
         });
 
         $('#btnSubmit').on("click", function(){
 
-            var method = (saveMethod == 'add') ? "POST" : "PUT";
-
             $.ajax({
                 headers : {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                url : HOST_me+"/supplier/jenis",
-                method : method,
+                url : '{{ route('branchStore') }}',
+                method : 'POST',
                 data : $('#formModal').serialize(),
                 dataType : "JSON",
                 success : function(data)
@@ -167,11 +188,10 @@
                     swal.fire({
                         html: jqXHR.responseJSON.message+"<br><br>"+jqXHR.responseJSON.file+"<br><br>Line: "+jqXHR.responseJSON.line,
                     });
+                    emptyValidation()
                     for (const property in jqXHR.responseJSON.errors) {
                         // console.log(`${property}: ${jqXHR.responseJSON.errors[property]}`);
-                        $('.invalid-feedback').remove();
                         $('[name="'+`${property}`+'"').addClass('is-invalid').after('<div class="invalid-feedback" style="display: block;">'+`${jqXHR.responseJSON.errors[property]}`+'</div>');
-                        $("#alertText").empty();
                         $("#alertText").append("<li>"+`${jqXHR.responseJSON.errors[property]}`+"</li>");
                     }
                 }
@@ -179,20 +199,22 @@
         });
 
         $('body').on("click", '#btnEdit', function(){
-            var dataEdit = $(this).data("value");
+            let dataEdit = $(this).data("value");
 
             saveMethod = 'edit';
             console.log(saveMethod);
             $.ajax({
                 headers : {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                url : HOST_me+"/supplier/jenis/"+dataEdit,
+                url : "{{url('/stock/branch/edit/')}}/"+dataEdit,
                 method: "GET",
                 dataType : "JSON",
                 success : function (data) {
                     $('#formModal').trigger('reset'); // reset form on modals
                     // insert value
                     $('[name="id"]').val(data.id);
-                    $('[name="jenis"]').val(data.jenis);
+                    $('[name="namaGudang"]').val(data.branchName);
+                    $('[name="alamat"]').val(data.alamat);
+                    $('[name="kota"]').val(data.kota);
                     $('[name="keterangan"]').val(data.keterangan);
                     $('#modalCrud').modal('show'); // show bootstrap modal
                 },
@@ -207,12 +229,12 @@
 
         $('body').on("click", "#btnSoft", function(){
             if (confirm('Serius untuk hapus data?')) {
-                var dataDelete = $(this).data("value");
+                let dataDelete = $(this).data("value");
                 // ajax delete data to database
                 $.ajax({
                     headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    url: HOST_me + "/supplier/jenis/" + dataDelete,
-                    type: "POST",
+                    url: "{{url('/stock/branch/edit/')}}/"+dataDelete,
+                    type: "DELETE",
                     dataType: "JSON",
                     success: function (data) {
                         //if success reload ajax table
@@ -233,58 +255,10 @@
             }
         });
 
-        $('body').on("click", "#btnRestore", function(){
-            var dataRestore = $(this).data("value");
-            // ajax delete data to database
-            $.ajax({
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                url: HOST_me + "/supplier/jenis/" + dataRestore,
-                type: "PUT",
-                dataType: "JSON",
-                success: function (data) {
-                    //if success reload ajax table
-                    reloadTable();
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    swal.fire({
-                        html: jqXHR.responseJSON.message + "<br><br>" + jqXHR.responseJSON.file + "<br><br>Line: " + jqXHR.responseJSON.line,
-                    });
-                    for (const property in jqXHR.responseJSON.errors) {
-                        console.log(`${property}: ${jqXHR.responseJSON.errors[property]}`);
-                        $("#alertText").append("<li>" + `${jqXHR.responseJSON.errors[property]}` + "</li>");
-                    }
-                }
-            });
-        });
-
-        $('body').on("click", "#btnForce", function(){
-            var dataForce = $(this).data("value");
-            // ajax delete data to database
-            $.ajax({
-                headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                url: HOST_me + "/supplier/jenis/" + dataForce,
-                type: "DELETE",
-                dataType: "JSON",
-                success: function (data) {
-                    //if success reload ajax table
-                    reloadTable();
-                },
-                error: function (jqXHR, textStatus, errorThrown) {
-                    swal.fire({
-                        html: jqXHR.responseJSON.message + "<br><br>" + jqXHR.responseJSON.file + "<br><br>Line: " + jqXHR.responseJSON.line,
-                    });
-                    for (const property in jqXHR.responseJSON.errors) {
-                        console.log(`${property}: ${jqXHR.responseJSON.errors[property]}`);
-                        $("#alertText").append("<li>" + `${jqXHR.responseJSON.errors[property]}` + "</li>");
-                    }
-                }
-            });
-        });
-
         // reload table
         function reloadTable()
         {
-            table.DataTable().ajax.reload();
+            $(table).DataTable().ajax.reload();
         }
 
     </script>

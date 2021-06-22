@@ -41,9 +41,14 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-2 col-form-label text-lg-left" for="user">User </label>
+                        <label class="col-md-2 col-form-label text-lg-left" for="user">Gudang </label>
                         <div class="col-md-4">
-                            <input type="text" class="form-control" id="user" name="user" value="{{Auth()->user()->name}}" readonly>
+                            <select name="gudang" id="gudang" class="form-control">
+                                @forelse($branch as $row)
+                                <option value="{{$row->id}}">{{ $row->branchName }}</option>
+                                @empty
+                                @endforelse
+                            </select>
                         </div>
                         <label class="col-md-2 col-form-label text-lg-left" for="keterangan">Keterangan</label>
                         <div class="col-md-4">

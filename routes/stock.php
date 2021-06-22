@@ -25,3 +25,24 @@ Route::get('/stock/branch', [App\Http\Controllers\Stock\BranchController::class,
     ->name('branchIndex');
 Route::patch('/stock/branch', [App\Http\Controllers\Stock\BranchController::class, 'branchList'])
     ->name('branchList');
+Route::post('/stock/branch', [App\Http\Controllers\Stock\BranchController::class, 'store'])
+    ->name('branchStore');
+Route::get('/stock/branch/edit/{id}', [App\Http\Controllers\Stock\BranchController::class, 'edit'])
+    ->name('branchEdit');
+Route::delete('/stock/branch/edit/{id}', [App\Http\Controllers\Stock\BranchController::class, 'destroy'])
+    ->name('branchDelete');
+
+// Stock Akhir
+Route::get('/stock/stockAkhir', [\App\Http\Controllers\Stock\StockAkhirController::class, 'index'])
+    ->name('stockAkhirIndex');
+Route::patch('/stock/stockAkhir', [\App\Http\Controllers\Stock\StockAkhirController::class, 'stockAkhirList'])
+    ->name('stockAkhirList');
+Route::put('/stock/stockAkhir', [\App\Http\Controllers\Stock\StockAkhirController::class, 'tableProduk'])
+    ->name('stockAkhirListProduk');
+Route::post('/stock/stockAkhir', [\App\Http\Controllers\Stock\StockAkhirController::class, 'store'])
+    ->name('stockAkhirStore');
+Route::get('/stock/stockAkhir/{id}', [\App\Http\Controllers\Stock\StockAkhirController::class, 'edit']);
+Route::delete('/stock/stockAkhir/{id}', [\App\Http\Controllers\Stock\StockAkhirController::class, 'destroy']);
+
+// Stock Semua
+//Route::get('/stock/semua');
