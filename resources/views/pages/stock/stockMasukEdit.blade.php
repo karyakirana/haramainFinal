@@ -42,7 +42,7 @@
                         </div>
                     </div>
                     <div class="form-group row">
-                        <label class="col-md-2 col-form-label text-lg-left" for="user">User </label>
+                        <label class="col-md-2 col-form-label text-lg-left" for="user">Gudang </label>
                         <div class="col-md-4">
                             <select name="gudang" id="gudang" class="form-control">
                                 <option value="" selected>Harus diisi</option>

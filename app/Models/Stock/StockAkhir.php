@@ -10,7 +10,7 @@ class StockAkhir extends Model
 {
     use HasFactory;
 
-    protected $table = 'stock_akhir';
+    protected $table = 'stockakhir';
     protected $fillable = [
         'activeCash', 'branchId', 'id_produk', 'jumlah_stock'
     ];

@@ -25,17 +25,17 @@ class InventoryReal extends Model
         return $this->belongsTo(BranchStock::class, 'branchId');
     }
 
-    public function allForeignTable()
+    public function scopeAllForeignTable()
     {
         $data = DB::table('inventory_real as ir')
-            ->leftJoin('produk as p')
-            ->leftJoin('branch_stock as b')
+            ->leftJoin('produk as p', 'p.id_produk', '=', 'ir.idProduk')
+            ->leftJoin('branch_stock as b', 'b.id', '=', 'branchId')
             ->select(
                 'ir.idProduk as idProduk', 'p.nama_produk as produkName',
-                'branchId', 'b.branchName as branchName',
-                'stockIn', 'stockOut', 'stockNow'
+                'ir.branchId as branchId', 'b.branchName as branchName',
+                'ir.stockIn as stockIn', 'ir.stockOut as stockOut', 'ir.stockNow as stockNow'
             )
             ->orderBy('idProduk', 'asc');
-        return $data->get();
+        return $data;
     }
 }
