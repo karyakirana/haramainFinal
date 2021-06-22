@@ -5,7 +5,7 @@ use Illuminate\Support\Facades\Route;
 Route::middleware(['auth'])->group(function(){
 
     Route::get('/stock/masuk', 'Stock\StockMasukController@index');
-    Route::post('/stock/masuk', 'Stock\StockMasukController@store');
+    Route::post('/stock/masuk', 'Stock\StockMasukController@storeWithReal'); // default @store
     Route::put('/stock/masuk', 'Stock\StockMasukController@update');
     Route::patch('/stock/masuk', 'Stock\StockMasukController@daftarStockMasuk');
 
@@ -52,6 +52,10 @@ Route::middleware(['auth'])->group(function(){
     Route::put('/stock/real/fromstockakhir', [\App\Http\Controllers\Stock\InventoryRealController::class, 'refreshStockFromAkhir'])->name('refreshStockFromAkhir');
     Route::put('/stock/real/formstockmasuk', [\App\Http\Controllers\Stock\InventoryRealController::class, 'refreshStockFromGudangIn'])->name('refreshStockFromGudangIn');
 
+    Route::get('/stock/real/by/{id}', [\App\Http\Controllers\Stock\InventoryRealController::class, 'indexByBranch']);
+    Route::patch('/stock/real/by/{id}', [\App\Http\Controllers\Stock\InventoryRealController::class, 'inventoryByBranch']);
+
+    // rekonsiliasi
 });
 
 

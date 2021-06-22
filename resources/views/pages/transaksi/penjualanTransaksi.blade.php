@@ -231,6 +231,7 @@
                 <th class="none">Size</th>
                 <th>Cover</th>
                 <th>Harga</th>
+                <th class="none">Stock</th>
                 <th class="none">Keterangan</th>
                 <th></th>
             </tr>

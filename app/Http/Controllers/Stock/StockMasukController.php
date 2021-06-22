@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Stock;
 use App\Http\Controllers\Controller;
 use App\Models\Master\Supplier;
 use App\Models\Stock\Branch;
+use App\Models\Stock\InventoryReal;
 use App\Models\Stock\StockDetilTemp;
 use App\Models\Stock\StockMasuk;
 use App\Models\Stock\StockMasukDetil;
@@ -108,7 +109,7 @@ class StockMasukController extends Controller
         return view('pages.stock.stockMasukBaru', $data)->with(['branch'=>$branch]);
     }
 
-    public function store(Request $request)
+    public function storeWithReal(Request $request)
     {
         $idStock = $this->idStockMasuk();
         $idStockTemp = $request->temp;
@@ -117,53 +118,60 @@ class StockMasukController extends Controller
         // ambil data stock_detil_temp
         $detilTemp = StockDetilTemp::where('stockTemp', $idStockTemp)->get();
 
-
-
-        $data = [
-            'activeCash' => session('ClosedCash'),
-            'kode' => $idStock,
-            'tglMasuk' => $tglMasuk,
-            'idBranch'=> $request->gudang,
-            'idSupplier' => $request->id_supplier,
-            'idUser' => Auth::user()->id,
-            'nomorPo' => $request->nomorPo,
-            'keterangan' => $request->keterangan,
-        ];
-
-        $jsonData = null;
         DB::beginTransaction();
         try {
-            $insertMaster = StockMasuk::create($data);
-            $dataDetil = null;
+            $insertMaster = StockMasuk::create([
+                'activeCash' => session('ClosedCash'),
+                'kode' => $idStock,
+                'tglMasuk' => $tglMasuk,
+                'idBranch'=> $request->gudang,
+                'idSupplier' => $request->id_supplier,
+                'idUser' => Auth::user()->id,
+                'nomorPo' => $request->nomorPo,
+                'keterangan' => $request->keterangan,
+            ]);
             foreach ($detilTemp as $row){
-                $data = [
+                // insert detil
+                $insertDetil = StockMasukDetil::create([
                     'idStockMasuk'=> $insertMaster->id,
                     'idProduk'=> $row->idProduk,
                     'jumlah'=> $row->jumlah,
-                ];
-                $dataDetil []= $data;
+                ]);
+                //inventory real
+                $check = InventoryReal::where('branchId', $request->gudang)
+                    ->where('idProduk', $row->idProduk)->first();
+                if (!$check){
+                    // insert
+                    $insert = InventoryReal::create([
+                        'idProduk'=>$row->idProduk,
+                        'branchId'=>$request->gudang,
+                        'stockIn'=>$row->jumlah,
+                        'stockNow'=>$row->jumlah,
+                    ]);
+                } else {
+                    // update increment
+                    $update = InventoryReal::where('idProduk', $row->idProduk)
+                        ->where('branchId', $request->gudang)
+                        ->update([
+                            'stockIn'=> DB::raw('stockNow +'.$row->jumlah),
+                            'stockNow'=> DB::raw('stockNow +'.$row->jumlah),
+                        ]);
+                }
             }
-            $insertDetil = StockMasukDetil::insert($dataDetil);
-            $deleteTempDetil = StockDetilTemp::where('stockTemp', $idStockTemp)->delete();
-            $deleteTempMaster = StockTemp::where('id', $idStockTemp)->delete();
             DB::commit();
-            session()->forget('stockMasuk');
             $jsonData = [
                 'status' => true,
-                'detail' => $insertDetil,
-                'master' => $insertMaster,
-                'deleteDetil' => $deleteTempDetil,
-                'deleteMaster' => $deleteTempMaster,
-                'nomorStockMasuk' => str_replace('/', '-', $idStock),
+                'keterangan' => 'sukses',
             ];
-        } catch (ModelNotFoundException $e){
+            return response()->json($jsonData);
+        } catch (\Exception $e) {
             DB::rollBack();
             $jsonData = [
                 'status' => false,
                 'keterangan' => $e->getMessage(),
             ];
+            return response()->json($jsonData);
         }
-        return json_encode($jsonData);
     }
 
     public function edit($id)
@@ -247,6 +255,18 @@ class StockMasukController extends Controller
         $jsonData = null;
         DB::beginTransaction();
         try {
+            $detilOld = StockMasukDetil::where('idStockMasuk', $idStockMasuk)->get();
+            foreach ($detilOld as $row)
+            {
+                // decrease stock
+                InventoryReal::where('idProduk', $row->idProduk)
+                    ->where('branchId', $request->gudang)
+                    ->update([
+                        'stockIn'=> DB::raw('stockNow -'.$row->jumlah),
+                        'stockNow'=> DB::raw('stockNow -'.$row->jumlah),
+                ]);
+            }
+
             $deleteDetail = StockMasukDetil::where('idStockMasuk', $idStockMasuk)->delete();
             $dataDetil = null;
             $insertMaster = StockMasuk::where('id', $idStockMasuk)->update($data);
@@ -261,6 +281,26 @@ class StockMasukController extends Controller
             $insertDetil = StockMasukDetil::insert($dataDetil);
             $deleteTempDetil = StockDetilTemp::where('stockTemp', $idStockTemp)->delete();
             $deleteTempMaster = StockTemp::where('id', $idStockTemp)->delete();
+            // update stock
+            $check = InventoryReal::where('branchId', $request->gudang)
+                ->where('idProduk', $row->idProduk)->first();
+            if (!$check){
+                // insert
+                $insert = InventoryReal::create([
+                    'idProduk'=>$row->idProduk,
+                    'branchId'=>$request->gudang,
+                    'stockIn'=>$row->jumlah,
+                    'stockNow'=>$row->jumlah,
+                ]);
+            } else {
+                // update increment
+                $update = InventoryReal::where('idProduk', $row->idProduk)
+                    ->where('branchId', $request->gudang)
+                    ->update([
+                        'stockIn'=> DB::raw('stockNow +'.$row->jumlah),
+                        'stockNow'=> DB::raw('stockNow +'.$row->jumlah),
+                    ]);
+            }
             DB::commit();
             session()->forget('stockMasuk');
             $jsonData = [

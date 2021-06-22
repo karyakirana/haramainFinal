@@ -36,7 +36,11 @@ class PenjualanTempController extends Controller
         $dataJoin = Produk::leftJoin('kategori as k', 'produk.id_kategori', '=', 'k.id_kategori')
             ->leftJoin('kategori_harga as kh', 'produk.id_kat_harga', '=', 'kh.id_kat_harga')
             ->select('produk.id_produk as produkId', 'k.id_lokal as idLokal', 'k.nama as kategori', 'kh.nama_kat as kategoriHarga','size',
-                'penerbit', 'hal', 'cover', 'nama_produk', 'harga', 'produk.deskripsi', 'produk.created_at', 'produk.kode_lokal as kLokal', 'stock' )
+                'penerbit', 'hal', 'cover', 'nama_produk', 'harga', 'produk.deskripsi', 'produk.created_at', 'produk.kode_lokal as kLokal', 'inventory_real.stockIn as stock' )
+            ->leftJoin('inventory_real', function($join){
+                $join->on('produk.id_produk', '=', 'inventory_real.idProduk')
+                    ->where('inventory_real.branchId', '1');
+            })
             ->orderBy('id_produk', 'desc')
             ->get();
         $data = $dataJoin;

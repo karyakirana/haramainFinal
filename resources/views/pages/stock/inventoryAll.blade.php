@@ -77,7 +77,7 @@
                 },
                 columns: [
                     // {data: 'kode'},
-                    {data: 'idProduk', name: 'ir.idProduk'},
+                    {data: 'idProduk'},
                     {data: 'branchName'},
                     {data: 'produkName'},
                     {data: 'stockIn', render : $.fn.dataTable.render.number( '.', ',', 0, '')},
@@ -87,8 +87,8 @@
                 ],
                 columnDefs: [
                     {
-                        targets : [-1],
-                        orderable: false
+                        // targets : [-1],
+                        // orderable: false
                     }
                 ],
             });

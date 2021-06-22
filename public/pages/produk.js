@@ -115,7 +115,7 @@ var KTDatatablesDataSourceAjaxServer = function() {
                 {data: 'hal'},
                 {data: 'size'},
                 {data: 'cover'},
-                {data: 'harga'},
+                {data: 'harga', render : $.fn.dataTable.render.number( '.', ',', 0, '')},
                 {data: 'deskripsi'},
                 {data: 'Actions', responsivePriority: -1},
             ],

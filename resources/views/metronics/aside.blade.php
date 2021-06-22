@@ -402,6 +402,30 @@
                                     <span class="menu-text">Daftar Gudang</span>
                                 </a>
                             </li>
+                            <li class="menu-item {{ (request()->is('stock/real')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                <a href="/stock/real" class="menu-link">
+                                    <i class="menu-bullet menu-bullet-line">
+                                        <span></span>
+                                    </i>
+                                    <span class="menu-text">Daftar Barang Realtime</span>
+                                </a>
+                            </li>
+                            @php
+                            use App\Models\Stock\Branch;
+                            $branch = Branch::all();
+                            @endphp
+
+                            @forelse($branch as $row)
+                                <li class="menu-item {{ (request()->is('stock/real/by/'.$row->id)) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                    <a href="/stock/real/by/{{ $row->id }}" class="menu-link">
+                                        <i class="menu-bullet menu-bullet-line">
+                                            <span></span>
+                                        </i>
+                                        <span class="menu-text">Daftar By {{ $row->branchName }}</span>
+                                    </a>
+                                </li>
+                            @empty
+                            @endforelse
                         </ul>
                     </div>
                 </li>

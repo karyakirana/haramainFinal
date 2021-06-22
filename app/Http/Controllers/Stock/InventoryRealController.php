@@ -20,7 +20,20 @@ class InventoryRealController extends Controller
 
     public function inventoryList()
     {
-        $data = InventoryReal::allForeignTable();
+        $data = InventoryReal::allForeignTable()->get();
+        return DataTables::of($data)
+            ->make(true);
+    }
+
+    public function indexByBranch($branch)
+    {
+        $data = ['branch'=>$branch];
+        return view('pages.stock.inventoryByBranch', $data);
+    }
+
+    public function inventoryByBranch($branch)
+    {
+        $data = InventoryReal::allForeignTable()->where('branchId', $branch)->get();
         return DataTables::of($data)
             ->make(true);
     }

@@ -15,7 +15,7 @@ class StockMasuk extends Model
 
     protected $table = 'stockmasuk';
     protected $fillable = [
-        'kode', 'idBranch','idSupplier', 'idUser',
+        'kode', 'activeCash', 'idBranch','idSupplier', 'idUser',
         'tglMasuk', 'nomorPo', 'keterangan'
     ];
 
