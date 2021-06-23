@@ -378,6 +378,14 @@
 													<span class="menu-text">Stock</span>
 												</span>
                             </li>
+                            <li class="menu-item {{ (request()->is('stock/stockAkhir')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
+                                <a href="/stock/stockAkhir" class="menu-link">
+                                    <i class="menu-bullet menu-bullet-line">
+                                        <span></span>
+                                    </i>
+                                    <span class="menu-text">Stock Akhir</span>
+                                </a>
+                            </li>
                             <li class="menu-item {{ (request()->is('stock/masuk')) ? 'menu-item-active' : '' }}" aria-haspopup="true">
                                 <a href="/stock/masuk" class="menu-link">
                                     <i class="menu-bullet menu-bullet-line">

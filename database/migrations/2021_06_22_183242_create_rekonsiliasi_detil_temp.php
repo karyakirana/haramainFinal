@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class TableRekonsiliasiBranchDetil extends Migration
+class CreateRekonsiliasiDetilTemp extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class TableRekonsiliasiBranchDetil extends Migration
      */
     public function up()
     {
-        Schema::create('rekonsiliasi_branch_detil', function (Blueprint $table) {
+        Schema::create('rekonsiliasi_detil_temp', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('idRekonsiliasi');
+            $table->bigInteger('idTemp');
             $table->string('idProduk');
             $table->integer('jumlah');
             $table->timestamps();
@@ -29,6 +29,6 @@ class TableRekonsiliasiBranchDetil extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('rekonsiliasi_branch_detil');
+        Schema::dropIfExists('rekonsiliasi_detil_temp');
     }
 }

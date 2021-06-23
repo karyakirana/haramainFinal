@@ -56,6 +56,14 @@ Route::middleware(['auth'])->group(function(){
     Route::patch('/stock/real/by/{id}', [\App\Http\Controllers\Stock\InventoryRealController::class, 'inventoryByBranch']);
 
     // rekonsiliasi
+    Route::get('/stock/rekonsiliasi/', [\App\Http\Controllers\Stock\RekonsiliasiController::class, 'index']);
+    Route::get('/stock/rekonsiliasi/transaksi', [\App\Http\Controllers\Stock\RekonsiliasiController::class, 'create']);
+
+    // rekonsiliasi Temp
+    Route::post('/stock/rekonsiliasi/temp', [\App\Http\Controllers\Stock\RekonsiliasiTempController::class, 'store']);
+    Route::patch('/stock/rekonsiliasi/temp/{id}', [\App\Http\Controllers\Stock\RekonsiliasiTempController::class, 'tableTemp']);
+    Route::get('/stock/rekonsiliasi/temp/{id}', [\App\Http\Controllers\Stock\RekonsiliasiTempController::class, 'edit']);
+    Route::delete('/stock/rekonsiliasi/temp/{id}', [\App\Http\Controllers\Stock\RekonsiliasiTempController::class, 'destroy']);
 });
 
 

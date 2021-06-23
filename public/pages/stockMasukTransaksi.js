@@ -317,9 +317,10 @@ $('#tambahBtn').on('click', function (){
             swal.fire({
                 html: jqXHR.responseJSON.message+"<br><br>"+jqXHR.responseJSON.file+"<br><br>Line: "+jqXHR.responseJSON.line,
             });
+            $('.invalid-feedback').remove();
+            $('.is-invalid').remove('is-invalid');
             for (const property in jqXHR.responseJSON.errors) {
                 // console.log(`${property}: ${jqXHR.responseJSON.errors[property]}`);
-                $('.invalid-feedback').remove();
                 $('[name="'+`${property}`+'"').addClass('is-invalid').after('<div class="invalid-feedback" style="display: block;">'+`${jqXHR.responseJSON.errors[property]}`+'</div>');
                 $("#alertText").empty();
                 $("#alertText").append("<li>"+`${jqXHR.responseJSON.errors[property]}`+"</li>");
