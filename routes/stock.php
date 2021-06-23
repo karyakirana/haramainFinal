@@ -58,6 +58,7 @@ Route::middleware(['auth'])->group(function(){
     // rekonsiliasi
     Route::get('/stock/rekonsiliasi/', [\App\Http\Controllers\Stock\RekonsiliasiController::class, 'index']);
     Route::get('/stock/rekonsiliasi/transaksi', [\App\Http\Controllers\Stock\RekonsiliasiController::class, 'create']);
+    Route::post('/stock/rekonsiliasi/transaksi', [\App\Http\Controllers\Stock\RekonsiliasiController::class, 'store']);
 
     // rekonsiliasi Temp
     Route::post('/stock/rekonsiliasi/temp', [\App\Http\Controllers\Stock\RekonsiliasiTempController::class, 'store']);

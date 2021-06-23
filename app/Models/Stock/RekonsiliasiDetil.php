@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class RekonsiliasiDetil extends Model
 {
     use HasFactory;
-    protected $table = 'rekonsiliasi_detil_temp';
+    protected $table = 'rekonsiliasi_branch_detil';
     protected $fillable =[
         'idRekonsiliasi', 'idProduk', 'jumlah'
     ];

@@ -10,9 +10,10 @@
     <x-metronics-card>
         <div class="row">
             <div class="col-md-8">
-                <form action="#" id="master">
+                <form action="#" id="master" method="POST">
+                    @csrf
                     <input type="text" name="temp" hidden value="{{$tempId}}">
-                    <input type="text" name="id_penjualan" hidden value="">
+                    <input type="text" name="idRekonsiliasi" hidden value="">
                     <input type="text" name="diskonCustomer" hidden>
                     <input type="text" name="idSales" value="{{Auth()->user()->id}}" hidden>
                     <div class="form-group row">
@@ -377,6 +378,11 @@
                     }
                 });
             });
+
+            // save Global
+            $('#submitGlobal').on('click', function (){
+                $( "#master" ).submit();
+            })
 
         </script>
         <!--end::Page Scripts-->

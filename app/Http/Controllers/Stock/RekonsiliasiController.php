@@ -3,10 +3,13 @@
 namespace App\Http\Controllers\Stock;
 
 use App\Http\Controllers\Controller;
+use App\Models\Stock\RekonsiliasiDetil;
+use App\Models\Stock\RekonsiliasiDetilTemp;
 use App\Models\Stock\RekonsiliasiMaster;
 use App\Models\Stock\RekonsiliasiTemp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
 
 class RekonsiliasiController extends Controller
@@ -62,6 +65,48 @@ class RekonsiliasiController extends Controller
 
     public function store(Request $request)
     {
-        //
+//        dd($request);
+//        $nomorTransaksi = $this->idRekonsiliasi();
+        DB::beginTransaction();
+        try {
+            // create transaction
+            $master = RekonsiliasiMaster::updateOrCreate(
+                ['id'=>$request->idRekonsiliasi],
+                [
+                    'kode'=>$request->nomorTransaksi,
+                    'tglBuat'=>date('Y-m-d', strtotime($request->tanggalNota)),
+                    'branchIdAsal'=>$request->gudangAsal,
+                    'branchIdAkhir'=>$request->gudangTujuan,
+                    'pembuat'=>$request->idSales,
+                    'nomorPo'=>$request->nomorPo,
+                    'keterangan'=>$request->keterangan
+                ]
+            );
+            // insert Detil
+            $detil = RekonsiliasiDetilTemp::where('idTemp', $request->temp);
+            foreach ($detil->get() as $row){
+                RekonsiliasiDetil::updateOrCreate(
+                    [
+                        'idRekonsiliasi'=>$request->idRekonsiliasi,
+                        'idProduk'=>$row->idProduk
+                    ],
+                    [
+                        'idRekonsiliasi'=>$master->id,
+                        'idProduk'=>$row->idProduk,
+                        'jumlah'=>$row->jumlah
+                    ]
+                );
+            }
+            // delete detil
+            $detil->delete();
+            // delete master
+            RekonsiliasiTemp::destroy($request->temp);
+            DB::commit();
+            session()->forget('rekonsiliasiTemp');
+            redirect()->to('/stock/rekonsiliasi/');
+        } catch (\Exception $e){
+            DB::rollBack();
+            dd($e);
+        }
     }
 }
