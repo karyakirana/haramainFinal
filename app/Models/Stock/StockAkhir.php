@@ -15,18 +15,18 @@ class StockAkhir extends Model
         'activeCash', 'branchId', 'id_produk', 'jumlah_stock'
     ];
 
-    public function getAllData()
+    public function scopeGetAllData()
     {
-        $data = DB::table('stock_akhir as sa')
-            ->leftJoin('branchId as b')
-            ->leftJoin('produk as p')
+        $data = DB::table('stockakhir as sa')
+            ->leftJoin('branch_stock as b', 'b.id', '=', 'sa.branchId')
+            ->leftJoin('produk as p', 'p.id_produk', '=', 'sa.id_produk')
             ->select(
                 'activeCash',
                 'b.branchName as branch',
-                'id_produk', 'p.nama_produk as produkName',
+                'p.id_produk as idProduk', 'p.nama_produk as produkName',
                 'jumlah_stock'
             )
-            ->orderBy('id_produk', 'asc');
+            ->orderBy('idProduk', 'asc');
         return $data->get();
     }
 }

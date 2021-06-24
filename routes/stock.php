@@ -46,6 +46,8 @@ Route::middleware(['auth'])->group(function(){
     Route::get('/stock/stockAkhir/{id}', [\App\Http\Controllers\Stock\StockAkhirController::class, 'edit']);
     Route::delete('/stock/stockAkhir/{id}', [\App\Http\Controllers\Stock\StockAkhirController::class, 'destroy']);
 
+    Route::get('stock/stockakhir/transaksi/baru', [\App\Http\Controllers\Stock\StockAkhirTransController::class, 'index']);
+
     // Stock Real
     Route::get('/stock/real', [\App\Http\Controllers\Stock\InventoryRealController::class, 'index'])->name('stockRealIndex');
     Route::patch('/stock/real', [\App\Http\Controllers\Stock\InventoryRealController::class, 'inventoryList'])->name('stockRealList');

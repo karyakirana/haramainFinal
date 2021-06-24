@@ -4,7 +4,7 @@
     </x-slot>
 
     <x-slot name="subHeader">
-        <x-sub-header title="Master" subTitle="Data Jenis Supplier"></x-sub-header>
+        <x-sub-header title="Master" subTitle="Stock"></x-sub-header>
     </x-slot>
 
     {{-- begin::slot --}}
@@ -14,7 +14,7 @@
             <span class="card-icon">
                 <i class="flaticon2-supermarket text-primary"></i>
             </span>
-            <h3 class="card-label">Data Jenis Supplier</h3>
+            <h3 class="card-label">Stock Akhir</h3>
         </x-slot>
 
         <x-slot name="toolbar">
@@ -51,49 +51,15 @@
 
     </x-metronics-card>
 
-    <x-modals modalId="modalCrud" formId="formModal">
-        <input type="text" name="id" hidden>
-        <input type="text" name="idProduk" hidden>
-        <div class="form-group row">
-            <label class="col-2 col-form-label">Produk</label>
-            <div class="col-10">
-                <input class="form-control" type="text" name="namaProduk" id="namaProduk" readonly>
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-2 col-form-label">Gudang</label>
-            <div class="col-10">
-                <input class="form-control" type="text" name="branchId">
-            </div>
-        </div>
-        <div class="form-group row">
-            <label class="col-2 col-form-label">Jumlah</label>
-            <div class="col-10">
-                <input class="form-control" type="text" name="jumlah">
-            </div>
-        </div>
-
-        <x-slot name="footer">
-            <button type="button"  class="btn btn-light-primary font-weight-bold" data-dismiss="modal">Close</button>
-            <button type="button" id="btnSubmit" class="btn btn-primary font-weight-bold">Save changes</button>
-        </x-slot>
-    </x-modals>
-    {{-- end::slot --}}
-
     <x-slot name="scripts">
         <!--begin::Page Vendors(used by this page)-->
         <script src="/assets/plugins/custom/datatables/datatables.bundle.js"></script>
         <!--end::Page Vendors-->
     </x-slot>
 
-    @push('script')
+    @push('scripts')
     <!--begin::Page Scripts(used by this page)-->
         <script>
-
-            // document.addEventListener("DOMContentLoaded", function(event) {
-            //     // Your code to run since DOM is loaded and ready
-            //     tablesOf;
-            // });
 
             let table = document.getElementById('kt_datatable');
 
@@ -114,177 +80,10 @@
                     },
                 },
                 columns: [
-                    {data: 'id_produk'},
-                    {data: 'branchName'},
+                    {data: 'idProduk'},
+                    {data: 'branch'},
                     {data: 'produkName'},
                     {data: 'jumlah_stock'},
-                    {data: 'Actions', responsivePriority: -1},
-                ],
-                columnDefs: [
-                    {
-                        targets : [-1],
-                        orderable: false
-                    }
-                ],
-            });
-
-            "use strict";
-
-            // class CRUD
-            var adibCrud = function(){
-
-                var modalButton;
-                var submitButton;
-                var cancelButton;
-                var closeButton;
-
-                modalButton.addEventListener("click", function () {
-                    //
-                })
-            };
-
-            let saveMethod;
-
-            function emptyValidation()
-            {
-                $('.invalid-feedback').remove();
-                $("#alertText").empty();
-            }
-
-            $('#btnNew').on("click",function(){
-                saveMethod = 'add';
-                emptyValidation()
-                $('#formModal').trigger('reset'); // reset form on modals
-                $('#modalCrud').modal('show'); // show bootstrap modal
-            });
-
-            $('#btnSubmit').on("click", function(){
-
-                $.ajax({
-                    headers : {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    url : '{{ route('branchStore') }}',
-                    method : "POST",
-                    data : $('#formModal').serialize(),
-                    dataType : "JSON",
-                    success : function(data)
-                    {
-                        if(data.status){
-                            $('#modalCrud').modal('hide');
-                            $('#alertTable').addClass('alert-light-success show');
-                            $("#alertText").append("Data Berhasil Diubah");
-                            reloadTable();
-                        }
-                    },
-                    error : function(jqXHR, textStatus, errorThrown0)
-                    {
-                        console.log(jqXHR.responseJSON);
-                        swal.fire({
-                            html: jqXHR.responseJSON.message+"<br><br>"+jqXHR.responseJSON.file+"<br><br>Line: "+jqXHR.responseJSON.line,
-                        });
-                        emptyValidation()
-                        for (const property in jqXHR.responseJSON.errors) {
-                            // console.log(`${property}: ${jqXHR.responseJSON.errors[property]}`);
-                            $('[name="'+`${property}`+'"').addClass('is-invalid').after('<div class="invalid-feedback" style="display: block;">'+`${jqXHR.responseJSON.errors[property]}`+'</div>');
-                            $("#alertText").append("<li>"+`${jqXHR.responseJSON.errors[property]}`+"</li>");
-                        }
-                    }
-                });
-            });
-
-            $('body').on("click", '#btnEdit', function(){
-                let dataEdit = $(this).data("value");
-
-                saveMethod = 'edit';
-                console.log(saveMethod);
-                $.ajax({
-                    headers : {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    url : "{{url('/stock/branch/edit/')}}"+dataEdit,
-                    method: "GET",
-                    dataType : "JSON",
-                    success : function (data) {
-                        $('#formModal').trigger('reset'); // reset form on modals
-                        // insert value
-                        $('[name="id"]').val(data.id);
-                        $('[name="namaGudang"]').val(data.branchName);
-                        $('[name="alamat"]').val(data.alamat);
-                        $('[name="kota"]').val(data.kota);
-                        $('[name="keterangan"]').val(data.keterangan);
-                        $('#modalCrud').modal('show'); // show bootstrap modal
-                    },
-                    error : function (jqXHR, textStatus, errorThrown)
-                    {
-                        swal.fire({
-                            html: jqXHR.responseJSON.message+"<br><br>"+jqXHR.responseJSON.file+"<br><br>Line: "+jqXHR.responseJSON.line,
-                        });
-                    }
-                });
-            })
-
-            $('body').on("click", "#btnSoft", function(){
-                if (confirm('Serius untuk hapus data?')) {
-                    let dataDelete = $(this).data("value");
-                    // ajax delete data to database
-                    $.ajax({
-                        headers: {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                        url: "{{url('/stock/branch/edit/')}}"+dataDelete,
-                        type: "DELETE",
-                        dataType: "JSON",
-                        success: function (data) {
-                            //if success reload ajax table
-                            reloadTable();
-                            $('#alertTable').addClass('alert-light-success show');
-                            $("#alertText").append("Data Berhasil Dihapus");
-                        },
-                        error: function (jqXHR, textStatus, errorThrown) {
-                            swal.fire({
-                                html: jqXHR.responseJSON.message + "<br><br>" + jqXHR.responseJSON.file + "<br><br>Line: " + jqXHR.responseJSON.line,
-                            });
-                            for (const property in jqXHR.responseJSON.errors) {
-                                console.log(`${property}: ${jqXHR.responseJSON.errors[property]}`);
-                                $("#alertText").append("<li>" + `${jqXHR.responseJSON.errors[property]}` + "</li>");
-                            }
-                        }
-                    });
-                }
-            });
-
-            // reload table
-            function reloadTable()
-            {
-                $(table).DataTable().ajax.reload();
-            }
-
-            // pilih produk
-            let produk = document.getElementById('namaProduk');
-            $(produk).DataTable({
-                responsive: true,
-                processing: true,
-                serverSide: true,
-                order : [],
-                ajax: {
-                    headers : {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
-                    url: "{{ route('stockAkhirListProduk') }}",
-                    type: 'PATCH',
-                    data: {
-                        // parameters for custom backend script demo
-                        columnsDef: [
-                            'id_produk', 'nama_produk',
-                            'id_lokal', 'kategoriName',
-                            'kategoriHargaName',
-                            'kode_lokal', 'hal', 'cover', 'harga'
-                        ],
-                    },
-                },
-                columns: [
-                    {data: 'id_produk'},
-                    {data: 'nama_produk'},
-                    {data: 'id_lokal'},
-                    {data: 'kategoriName'},
-                    {data: 'kategoriHargaName'},
-                    {data: 'kode_lokal'},
-                    {data: 'hal'},
-                    {data: 'cover'},
-                    {data: 'harga'},
                     {data: 'Actions', responsivePriority: -1},
                 ],
                 columnDefs: [

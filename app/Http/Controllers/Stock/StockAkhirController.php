@@ -18,7 +18,14 @@ class StockAkhirController extends Controller
     public function stockAkhirList()
     {
         $data = StockAkhir::getAllData();
-        return DataTables::of($data)->make(true);
+        return DataTables::of($data)
+            ->addColumn('Actions', function($row){
+                $btnEdit = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnEdit" data-value="'.$row->idProduk.'" title="Edit"><i class="la la-edit"></i></a>';
+                $btnSoft = '<a href="#" class="btn btn-sm btn-clean btn-icon" id="btnSoft" data-value="'.$row->idProduk.'" title="Delete"><i class="la la-trash"></i></a>';
+                return $btnEdit.$btnSoft;
+            })
+            ->rawColumns(['Actions'])
+            ->make(true);
     }
 
     public function store(Request $request)
