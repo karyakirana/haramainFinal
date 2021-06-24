@@ -36,7 +36,7 @@ class StockMasukController extends Controller
                 'u.name as name',
                 'bs.branchName as gudang'
             )
-            ->latest()->get();
+            ->orderBy('kode', 'desc')->get();
         return DataTables::of($data)
             ->addColumn('Actions', function ($row){
                 $btnPrint = '<a href="'.url('/stock/masuk/print/')."/".$row->stockmasukId.'" class="btn btn-sm btn-clean btn-icon" title="Print">
@@ -60,7 +60,7 @@ class StockMasukController extends Controller
     protected function idStockMasuk()
     {
 //        $closedCash = session('ClosedCash');
-        $data = StockMasuk::latest()->first();
+        $data = StockMasuk::orderBy('kode', 'desc')->first();
         $num = null;
         if(!$data){
             $num = 1;
@@ -158,6 +158,11 @@ class StockMasukController extends Controller
                         ]);
                 }
             }
+            // delete Temp Detail
+            StockDetilTemp::where('stockTemp', $idStockTemp)->delete();
+            // delete Temp master
+            StockTemp::destroy($idStockTemp);
+            session()->forget('stockMasuk');
             DB::commit();
             $jsonData = [
                 'status' => true,
