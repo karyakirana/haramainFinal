@@ -11,7 +11,12 @@ class StockTemp extends Model
 
     protected $table = 'stock_temp';
     protected $fillable = [
-        'jenisTemp', 'stockMasuk','idSupplier', 'idUser',
-        'tglMasuk', 'nomorPo', 'keterangan',
+        'jenisTemp', // jenis transaksi
+        'stockMasuk', // idStock jika digunakan untuk edit data
+        'idSupplier',
+        'idUser', // pengguna data
+        'tglMasuk',
+        'nomorPo',
+        'keterangan',
     ];
 }

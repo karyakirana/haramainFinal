@@ -28,16 +28,7 @@ class RekonsiliasiController extends Controller
 
     protected function idRekonsiliasi()
     {
-        $data = RekonsiliasiMaster::latest()->first();
-        $num = null;
-        if(!$data){
-            $num = 1;
-        } else {
-            $urutan = (int) substr($data->kode, 0, 4);
-            $num = $urutan + 1;
-        }
-        $id = sprintf("%04s", $num)."/SR/".date('Y');
-        return $id;
+        return RekonsiliasiMaster::generateKode();
     }
 
     public function create()
@@ -60,6 +51,9 @@ class RekonsiliasiController extends Controller
 
     public function edit($id)
     {
+        // check session
+        // get data master
+        // set data detil to detil temp
         return view('pages.stock.rekonsiliasiNew');
     }
 
