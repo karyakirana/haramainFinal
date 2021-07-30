@@ -149,7 +149,6 @@ class ProdukController extends Controller
 
         $data = [
             'id_kategori' => $request->idKategori,
-            'id_produk' => $this->idProduk(),
             'kode_lokal' => $request->kodeLokal,
             'penerbit' => $request->penerbit,
             'hal' => $request->halaman,
