@@ -7,6 +7,7 @@ use App\Models\Stock\InventoryReal;
 use App\Models\Stock\StockAkhir;
 use App\Models\Stock\StockMasuk;
 use App\Models\Stock\StockMasukDetil;
+use App\Models\Transaksi\PenjualanDetil;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Yajra\DataTables\DataTables;
@@ -57,7 +58,7 @@ class InventoryRealController extends Controller
                         'idProduk'=>$row->id_produk,
                         'branchId'=>$row->branchId,
                         'stockIn'=>$row->jumlah_stock,
-                        'stockNow'=>$row->jumlah_stock,
+                        'stockNow'=>DB::raw('stockNow +'.$row->jumlah_stock),
                     ]);
                     $tambah++;
                 } else {
@@ -65,7 +66,7 @@ class InventoryRealController extends Controller
                     $update = InventoryReal::where('idProduk', $row->id_produk)
                         ->where('branchId', $row->branchId)
                         ->update([
-                            'stockIn'=> DB::raw('stockNow +'.$row->jumlah_stock),
+                            'stockIn'=> DB::raw('stockIn +'.$row->jumlah_stock),
                             'stockNow'=> DB::raw('stockNow +'.$row->jumlah_stock),
                         ]);
                     $ngupdate++;
@@ -99,7 +100,7 @@ class InventoryRealController extends Controller
                         'idProduk'=>$row->idProduk,
                         'branchId'=>$row->branchId,
                         'stockIn'=>$row->jumlah,
-                        'stockNow'=>$row->jumlah,
+                        'stockNow'=>DB::raw('stockNow +'.$row->jumlah),
                     ]);
                     $tambah++;
                 } else {
@@ -107,7 +108,7 @@ class InventoryRealController extends Controller
                     $update = InventoryReal::where('idProduk', $row->idProduk)
                         ->where('branchId', $row->branchId)
                         ->update([
-                            'stockIn'=> DB::raw('stockNow +'.$row->jumlah),
+                            'stockIn'=> DB::raw('stockIn +'.$row->jumlah),
                             'stockNow'=> DB::raw('stockNow +'.$row->jumlah),
                         ]);
                     $ngupdate++;
@@ -123,7 +124,39 @@ class InventoryRealController extends Controller
 
     public function refreshStockFromSales()
     {
-        //
+        $stockKeluar = PenjualanDetil::select('id_produk', DB::raw('SUM(jumlah) as jumlah_produk'))
+            ->groupBy('id_produk')
+            ->get();
+        DB::beginTransaction();
+        try {
+            $tambah = 0;
+            $ngupdate = 0;
+            foreach ($stockKeluar as $row){
+                $check = InventoryReal::where('idProduk', $row->id_produk)->where('branchId', 1)->first();
+                if (!$check){
+                    $insert = InventoryReal::create([
+                        'idProduk'=>$row->id_produk,
+                        'branchId'=>1,
+                        'stockOut'=>$row->jumlah_produk,
+                        'stockNow'=>DB::raw('stockNow -'.$row->jumlah_produk),
+                    ]);
+                    $tambah++;
+                } else {
+                    $update = InventoryReal::where('idProduk', $row->id_produk)
+                        ->where('branchId', 1)
+                        ->update([
+                            'stockOut'=> DB::raw('stockOut +'.$row->jumlah_produk),
+                            'stockNow'=> DB::raw('stockNow -'.$row->jumlah_produk),
+                        ]);
+                    $ngupdate++;
+                }
+            }
+            DB::commit();
+            return response()->json(['status'=>true, 'insert'=>$tambah, 'update'=>$ngupdate]);
+        } catch (\Exception $e){
+            DB::rollBack();
+            return response()->json(['status'=>false, 'keterangan'=>$e]);
+        }
     }
 
     public function refreshStockAll()

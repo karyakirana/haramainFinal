@@ -53,6 +53,7 @@ Route::middleware(['auth'])->group(function(){
     Route::patch('/stock/real', [\App\Http\Controllers\Stock\InventoryRealController::class, 'inventoryList'])->name('stockRealList');
     Route::put('/stock/real/fromstockakhir', [\App\Http\Controllers\Stock\InventoryRealController::class, 'refreshStockFromAkhir'])->name('refreshStockFromAkhir');
     Route::put('/stock/real/formstockmasuk', [\App\Http\Controllers\Stock\InventoryRealController::class, 'refreshStockFromGudangIn'])->name('refreshStockFromGudangIn');
+    Route::put('/stock/real/formstockkeluar', [\App\Http\Controllers\Stock\InventoryRealController::class, 'refreshStockFromSales'])->name('refreshStockFromGudangOut');
 
     Route::get('/stock/real/by/{id}', [\App\Http\Controllers\Stock\InventoryRealController::class, 'indexByBranch']);
     Route::patch('/stock/real/by/{id}', [\App\Http\Controllers\Stock\InventoryRealController::class, 'inventoryByBranch']);

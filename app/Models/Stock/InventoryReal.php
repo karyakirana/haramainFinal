@@ -14,6 +14,8 @@ class InventoryReal extends Model
     protected $fillable = [
         'idProduk', 'branchId', 'stockIn', 'stockOut', 'stockNow'
     ];
+//    protected $primaryKey = 'idProduk';
+//    protected $keyType = 'string';
 
     public function produk()
     {

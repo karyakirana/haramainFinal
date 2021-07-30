@@ -146,6 +146,33 @@
                     }
                 });
             })
+
+            $('#btnSales').on('click', function (){
+                $.ajax({
+                    headers : {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')},
+                    url: '{{ route('refreshStockFromGudangOut') }}',
+                    type: 'PUT',
+                    success : function (data) {
+                        if (data.status){
+                            reloadTable();
+                            swal.fire({
+                                html : data.insert+"<br/>"+data.update,
+                            });
+                        } else {
+                            console.log(data.keterangan);
+                            swal.fire({
+                                html: data.keterangan.errorInfo,
+                            });
+                        }
+                    },
+                    error : function (jqXHR, textStatus, errorThrown)
+                    {
+                        swal.fire({
+                            html: jqXHR.responseJSON.message+"<br><br>"+jqXHR.responseJSON.file+"<br><br>Line: "+jqXHR.responseJSON.line,
+                        });
+                    }
+                });
+            })
         </script>
         <!--end::Page Scripts-->
     </x-slot>
